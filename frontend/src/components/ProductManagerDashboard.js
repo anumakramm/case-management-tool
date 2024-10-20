@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import './ProductManagerDashboard.css'; // Ensure the CSS is still imported
 
+
 const ProductManagerDashboard = () => {
+  const caseManagers = ["John Doe", "Jane Smith", "John Wick", "Sarah Connor", "Tony Stark"];
+  const clientsByCaseManager = {
+    "John Doe": ["Client A", "Client B"],
+    "Jane Smith": ["Client C", "Client D"],
+    "John Wick": ["Client E"],
+    "Sarah Connor": ["Client F"],
+    "Tony Stark": ["Client G", "Client H", "Client I", "Client J", "Client K", "Client L"]
+  };
+
   const [cases, setCases] = useState([
     { id: 1, title: "Case 001", assignedTo: "John Doe", client: "Client A", description: "Description for Case 001", status: "Open", startDate: "2024-01-01", endDate: "2024-01-31" },
     { id: 2, title: "Case 002", assignedTo: null, client: "Client B", description: "Description for Case 002", status: "Closed", startDate: "2024-02-01", endDate: "2024-02-28" },
@@ -17,10 +27,11 @@ const ProductManagerDashboard = () => {
     { id: 12, title: "Case 012", assignedTo: "Tony Stark", client: "Client L", description: "Description for Case 012", status: "Closed", startDate: "2024-12-01", endDate: "2024-12-31" },
   ]);
 
-  const assignees = ["John Doe", "Jane Smith", "John Wick", "Sarah Connor", "Tony Stark"];
-
   const [selectedCase, setSelectedCase] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCaseManager, setSelectedCaseManager] = useState("");
+  const [filteredClients, setFilteredClients] = useState([]);
+  const [selectedClient, setSelectedClient] = useState("");
 
   const handleAssigneeChange = (caseId, newAssignee) => {
     const updatedCases = cases.map((caseItem) =>
@@ -36,27 +47,73 @@ const ProductManagerDashboard = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedCase(null); // Clear selected case when closing modal
+    setSelectedCase(null);
   };
+
+  const handleCaseManagerChange = (e) => {
+    const selectedManager = e.target.value;
+    setSelectedCaseManager(selectedManager);
+    setFilteredClients(clientsByCaseManager[selectedManager] || []);
+    setSelectedClient("");
+  };
+
+  const handleClientChange = (e) => {
+    setSelectedClient(e.target.value);
+  };
+
+  const filteredCases = cases.filter(
+    (caseItem) =>
+      (!selectedCaseManager || caseItem.assignedTo === selectedCaseManager) &&
+      (!selectedClient || caseItem.client === selectedClient)
+  );
 
   return (
     <div className="dashboard-container">
-      <h2>Product Manager Dashboard</h2>
+      <h1>Product Manager Dashboard</h1>
+      
+      <h2>Manage Cases: </h2>
+      {/* Dropdown Panel */}
+      <div className="dropdown-panel">
+        {/* Case Manager Dropdown */}
+        <label>Select Case Manager: </label>
+        <select value={selectedCaseManager} onChange={handleCaseManagerChange}>
+          <option value="">Select Case Manager</option>
+          {caseManagers.map((manager, index) => (
+            <option key={index} value={manager}>
+              {manager}
+            </option>
+          ))}
+        </select>
+
+        {/* Client Dropdown */}
+        <label style={{ marginLeft: '20px' }}>Select Client: </label>
+        <select value={selectedClient} onChange={handleClientChange}>
+          <option value="">Select Client</option>
+          {filteredClients.map((client, index) => (
+            <option key={index} value={client}>
+              {client}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Case Table */}
+      <h2>Active Cases:</h2>
       <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th className="id-column">Case ID</th>
-              <th>Case Title</th>
-              <th>Client Name</th>
-              <th>Assigned To</th>
-            </tr>
-          </thead>
-        </table>
-        <div className="scrollable-table-container">
+        {filteredCases.length === 0 ? (
+          <p>No cases available for the selected filters.</p>
+        ) : (
           <table>
+            <thead>
+              <tr>
+                <th className="id-column">Case ID</th>
+                <th>Case Title</th>
+                <th>Client Name</th>
+                <th>Assigned To</th>
+              </tr>
+            </thead>
             <tbody>
-              {cases.map((caseItem) => (
+              {filteredCases.map((caseItem) => (
                 <tr key={caseItem.id} onClick={() => handleRowClick(caseItem)} className="clickable-row">
                   <td className="id-column">{caseItem.id}</td>
                   <td>{caseItem.title}</td>
@@ -67,9 +124,10 @@ const ProductManagerDashboard = () => {
                       value={caseItem.assignedTo || ""}
                       onChange={(e) => handleAssigneeChange(caseItem.id, e.target.value)}
                       onClick={(e) => e.stopPropagation()}
+                      onBlur={(e) => e.target.blur()}
                     >
                       <option value="" disabled>Select Assignee</option>
-                      {assignees.map((assignee, index) => (
+                      {caseManagers.map((assignee, index) => (
                         <option key={index} value={assignee}>
                           {assignee}
                         </option>
@@ -80,10 +138,10 @@ const ProductManagerDashboard = () => {
               ))}
             </tbody>
           </table>
-        </div>
+        )}
       </div>
 
-      {/* Modal for case details */}
+      {/* Modal for Case Details */}
       {isModalOpen && selectedCase && (
         <div className="modal">
           <div className="modal-content">

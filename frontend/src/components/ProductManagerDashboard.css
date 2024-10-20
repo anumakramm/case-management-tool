@@ -2,6 +2,40 @@
 .dashboard-container {
   padding: 20px;
   font-family: Arial, sans-serif;
+  background-color: #f5f5f5; /* Light background for the container */
+}
+
+/* Dropdown panel styling */
+.dropdown-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px; /* Space between dropdown and case list */
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-panel label {
+  font-size: 16px;
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+.dropdown-panel select {
+  font-size: 16px;
+  padding: 8px;
+  margin-right: 20px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.dropdown-panel select:focus {
+  border-color: #3f51b5;
+  outline: none;
 }
 
 /* Scrollable table container */
@@ -10,6 +44,8 @@
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
 }
 
 /* Table styling */
@@ -37,6 +73,7 @@ td {
 
 .id-column {
   width: 60px;
+  font-weight: bold;
 }
 
 /* Apply hover effect to rows */
@@ -101,10 +138,11 @@ select:focus {
 .modal-content {
   background-color: #fff;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 8px; /* Updated for more rounded corners */
   max-width: 500px;
   width: 80%;
   position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Shadow for modal */
 }
 
 .close {
