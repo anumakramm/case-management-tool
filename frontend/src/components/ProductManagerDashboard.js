@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
-import './ProductManagerDashboard.css'; // External CSS for styling
+import './ProductManagerDashboard.css'; // Make sure this line is present
 
 const ProductManagerDashboard = () => {
-  // Sample data to display the cases
   const [cases, setCases] = useState([
     { id: 1, title: "Case 001", assignedTo: "John Doe" },
-    { id: 2, title: "Case 002", assignedTo: null },  // Not yet assigned
+    { id: 2, title: "Case 002", assignedTo: null },
     { id: 3, title: "Case 003", assignedTo: "Jane Smith" },
-    // Add more cases as needed
+    { id: 4, title: "Case 004", assignedTo: "John Wick" }, // More cases for scrolling
+    { id: 5, title: "Case 005", assignedTo: "Sarah Connor" },
+    { id: 6, title: "Case 006", assignedTo: "Unassigned" },
+    { id: 7, title: "Case 007", assignedTo: "Tony Stark" },
+    { id: 8, title: "Case 008", assignedTo: "Tony Stark" },
+    { id: 9, title: "Case 009", assignedTo: "Tony Stark" },
+    { id: 10, title: "Case 010", assignedTo: "Tony Stark" },
+    { id: 11, title: "Case 011", assignedTo: "Tony Stark" },
+    { id: 12, title: "Case 012", assignedTo: "Tony Stark" },
   ]);
 
   return (
     <div className="dashboard-container">
-      <h2 className="dashboard-title">Product Manager Dashboard</h2>
-      <div className="scrollable-container">
-        <table className="case-table">
+      <h2>Product Manager Dashboard</h2>
+      <div className="scrollable-table-container">
+        <table>
           <thead>
             <tr>
               <th>Case ID</th>
