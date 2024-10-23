@@ -8,50 +8,60 @@
 .scrollable-table-container {
   max-height: 400px;
   overflow-y: auto;
-  border: 1px solid #ddd; /* Border around the scrollable container */
+  border: 1px solid #ddd;
   border-radius: 5px;
 }
 
-/* Style for table */
+/* Table styling */
 table {
   width: 100%;
-  border-collapse: collapse; /* Ensures there are no gaps between table cells */
-  margin: 10px 0;
+  border-collapse: collapse;
+  margin: 0;
   font-size: 16px;
 }
 
-/* Table header styling */
 th {
-  background-color: #3f51b5; /* Header background color */
+  background-color: #3f51b5;
   color: white;
   padding: 12px;
-  text-align: left;
+  text-align: center;
   border-bottom: 2px solid #ddd;
 }
 
-/* Table cell styling */
 td {
   padding: 12px;
-  border-bottom: 1px solid #ddd; /* Adds border between rows */
+  border-bottom: 1px solid #ddd;
   color: #333;
+  text-align: center;
 }
 
-/* Narrower width for Case ID column */
 .id-column {
-  width: 60px; 
+  width: 60px;
 }
 
-/* Hover effect for rows */
+/* Apply hover effect to rows */
+tbody tr {
+  transition: background-color 0.3s ease;
+}
+
 tbody tr:hover {
-  background-color: #f1f1f1; /* Slight background change on hover */
+  background-color: rgba(173, 216, 230, 0.7); /* Light blue on hover */
 }
 
-/* Alternating row colors */
+/* Alternate row coloring */
 tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; /* Light gray for even rows */
 }
 
-/* Styling for dropdown with no assignee */
+tbody tr:nth-child(odd) {
+  background-color: #ffffff; /* White for odd rows */
+}
+
+/* Add cursor pointer for clickable rows */
+.clickable-row {
+  cursor: pointer;
+}
+
 .unassigned {
   background-color: orange;
   color: white;
@@ -61,7 +71,6 @@ tbody tr:nth-child(even) {
   border: none;
 }
 
-/* General styling for select elements */
 select {
   padding: 6px;
   border-radius: 4px;
@@ -74,4 +83,47 @@ select {
 select:focus {
   outline: none;
   border-color: #3f51b5;
+}
+
+/* Modal Styling */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 80%;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+
+.close:hover {
+  color: red;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal p {
+  margin: 10px 0;
 }
