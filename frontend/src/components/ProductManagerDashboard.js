@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import './ProductManagerDashboard.css'; // Make sure this line is present
+import './ProductManagerDashboard.css'; // Ensure the CSS is still imported
 
 const ProductManagerDashboard = () => {
   const [cases, setCases] = useState([
     { id: 1, title: "Case 001", assignedTo: "John Doe" },
     { id: 2, title: "Case 002", assignedTo: null },
     { id: 3, title: "Case 003", assignedTo: "Jane Smith" },
-    { id: 4, title: "Case 004", assignedTo: "John Wick" }, // More cases for scrolling
+    { id: 4, title: "Case 004", assignedTo: "John Wick" },
     { id: 5, title: "Case 005", assignedTo: "Sarah Connor" },
-    { id: 6, title: "Case 006", assignedTo: "Unassigned" },
+    { id: 6, title: "Case 006", assignedTo: null },
     { id: 7, title: "Case 007", assignedTo: "Tony Stark" },
     { id: 8, title: "Case 008", assignedTo: "Tony Stark" },
     { id: 9, title: "Case 009", assignedTo: "Tony Stark" },
@@ -16,6 +16,17 @@ const ProductManagerDashboard = () => {
     { id: 11, title: "Case 011", assignedTo: "Tony Stark" },
     { id: 12, title: "Case 012", assignedTo: "Tony Stark" },
   ]);
+
+  // Available list of assignees
+  const assignees = ["John Doe", "Jane Smith", "John Wick", "Sarah Connor", "Tony Stark"];
+
+  // Handle case assignment update
+  const handleAssigneeChange = (caseId, newAssignee) => {
+    const updatedCases = cases.map((caseItem) =>
+      caseItem.id === caseId ? { ...caseItem, assignedTo: newAssignee } : caseItem
+    );
+    setCases(updatedCases);
+  };
 
   return (
     <div className="dashboard-container">
@@ -34,7 +45,20 @@ const ProductManagerDashboard = () => {
               <tr key={caseItem.id}>
                 <td>{caseItem.id}</td>
                 <td>{caseItem.title}</td>
-                <td>{caseItem.assignedTo ? caseItem.assignedTo : "Unassigned"}</td>
+                <td>
+                  <select
+                    className={caseItem.assignedTo ? '' : 'unassigned'} // Apply 'unassigned' class if no assignee
+                    value={caseItem.assignedTo || ""}
+                    onChange={(e) => handleAssigneeChange(caseItem.id, e.target.value)}
+                  >
+                    <option value="" disabled>Select Assignee</option>
+                    {assignees.map((assignee, index) => (
+                      <option key={index} value={assignee}>
+                        {assignee}
+                      </option>
+                    ))}
+                  </select>
+                </td>
               </tr>
             ))}
           </tbody>
