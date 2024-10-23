@@ -1,0 +1,65 @@
+/* Container for the dashboard */
+.dashboard-container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  /* Title styling */
+  .dashboard-title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Scrollable container for the cases */
+  .scrollable-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  
+  /* Table styling */
+  .case-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .case-table th, .case-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .case-table th {
+    background-color: #f4f4f4;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .case-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .case-table td {
+    color: #555;
+  }
+  
+  /* Responsive behavior */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      width: 95%;
+    }
+  
+    .dashboard-title {
+      font-size: 20px;
+    }
+  }
+  
