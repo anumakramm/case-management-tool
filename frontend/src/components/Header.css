@@ -1,0 +1,47 @@
+/* Header.css */
+
+/* Style the entire header */
+.header {
+    background-color: #282c34;
+    padding: 10px 20px;
+    position: relative;
+  }
+  
+  /* Flex container for the nav bar */
+  .nav-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  /* Flex container for the nav list */
+  .nav-list {
+    display: flex;
+    gap: 20px; /* Closer spacing between items */
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Styling for each nav item */
+  .nav-item a {
+    color: #61dafb;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Hover effect for a professional touch */
+  .nav-item a:hover {
+    background-color: #61dafb;
+    color: #282c34;
+    cursor: pointer;
+  }
+  
+  /* Optional - if you want to add some shadow to the header */
+  .header {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
