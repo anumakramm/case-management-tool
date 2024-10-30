@@ -165,3 +165,19 @@ select:focus {
 .modal p {
   margin: 10px 0;
 }
+
+/* Styling for the OK button */
+.ok-button {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text color */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Padding around text */
+  font-size: 16px; /* Font size */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.ok-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
