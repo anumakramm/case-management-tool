@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import "./AdminDashboard.css";
-import { AddClient } from "../api/client";
+//import { AddClient } from "../api/client";
 
 const Modal = ({
   isOpen,
