@@ -1,5 +1,5 @@
-import axios from "axios";
+import api from "./api";
 
 export function AddClient (data) {
-    return axios.post('http://localhost:8000/users/', data)
+    return api.post('/users/', data)
 }

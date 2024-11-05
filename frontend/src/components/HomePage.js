@@ -1,17 +1,27 @@
 // HomePage.js
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './HomePage.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import "./HomePage.css";
+import { signinAdmin } from "../api/admin";
 
 const HomePage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // console.log({});
+    signinAdmin({ username: username, password: password })
+      .then((res) => {
+        localStorage.setItem("admin_token", res.data.access_token)
+      })
+      .catch((err) => {
+        localStorage.removeItem("admin_token")
+      });
     // Handle login logic here based on role selection
-    console.log('Login attempt:', { username, role });
+    console.log("Login attempt:", { username, role });
   };
 
   return (

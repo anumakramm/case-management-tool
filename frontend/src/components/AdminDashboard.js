@@ -56,11 +56,12 @@ const AdminDashboard = () => {
     };
 
     useEffect(() => {
-        AddClient(
-            {
-                name: "XYZ",
-                email: "xyz@gmail.com"
-            }).then((res) => { console.log(res) }).catch((err) => { console.log(err) })
+        // do these type of api calls but with dunamic data with help of form
+        // AddClient(
+        //     {
+        //         name: "XYZT",
+        //         email: "xyzt@gmail.com"
+        //     }).then((res) => { console.log(res) }).catch((err) => { console.log(err) })
     }, [])
 
     const handleSubmit = (e) => {
