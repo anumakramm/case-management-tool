@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:8000', // Your API base URL
+  withCredentials: true, 
 });
 
 // Request interceptor to add the Authorization token to headers
