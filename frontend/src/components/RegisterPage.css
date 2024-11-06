@@ -29,19 +29,19 @@
     margin-bottom: 20px;
   }
   
-  form div {
+  .registration-overlay form div {
     margin-bottom: 15px;
     text-align: left;
   }
   
-  label {
+  .registration-overlay label {
     font-weight: bold;
     color: #555;
     margin-bottom: 5px;
     display: block;
   }
   
-  input, select {
+  .registration-overlay input, .registration-overlay select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -51,12 +51,12 @@
     transition: border-color 0.3s;
   }
   
-  input:focus, select:focus {
+  .registration-overlay input:focus, .registration-overlay select:focus {
     border-color: #9013fe;
     outline: none;
   }
   
-  button {
+  .registration-overlay button {
     width: 100%;
     padding: 12px;
     background: linear-gradient(135deg, #4a90e2, #9013fe);
@@ -70,7 +70,7 @@
     transition: background 0.3s;
   }
   
-  button:hover {
+  .registration-overlay button:hover {
     background: linear-gradient(135deg, #9013fe, #4a90e2);
     box-shadow: 0 5px 15px rgba(144, 19, 254, 0.3);
   }
