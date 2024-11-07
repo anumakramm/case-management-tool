@@ -11,8 +11,6 @@ const RegistrationPage = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log('Registered User:', { username, password, role });
     navigate('/');
   };
 

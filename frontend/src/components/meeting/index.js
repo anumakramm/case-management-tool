@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { createMeeting } from "../../api/caseManager";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useSelector } from "react-redux";
 
 const ScheduleMeeting = () => {
   const [subject, setSubject] = useState("");
@@ -13,7 +14,7 @@ const ScheduleMeeting = () => {
   const [duration, setDuration] = useState("");
   const [requiredAttendees, setRequiredAttendees] = useState("");
   const [optionalAttendees, setOptionalAttendees] = useState("");
-  const [organizerId, setOrganizerId] = useState("");
+  const caseManagerId = useSelector((state) => state.manager.caseManagerId);
 
   const handleScheduleMeeting = async (e) => {
     e.preventDefault();
@@ -25,13 +26,12 @@ const ScheduleMeeting = () => {
       duration: parseInt(duration),
       required_attendees: requiredAttendees,
       optional_attendees: optionalAttendees || null,
-      organizer_id: parseInt(organizerId),
+      organizer_id: caseManagerId,
     };
 
     createMeeting(meetingData)
       .then((res) => {
         alert("Meeting scheduled successfully!");
-        console.log("Scheduled meeting:", res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -66,7 +66,7 @@ const ScheduleMeeting = () => {
               onChange={(e) => setBody(e.target.value)}
             />
             <DateTimePicker
-            className="date-form-field"
+              className="date-form-field"
               label="Start Time"
               value={startTime}
               onChange={(newValue) => setStartTime(newValue)}
@@ -107,22 +107,12 @@ const ScheduleMeeting = () => {
               value={optionalAttendees}
               onChange={(e) => setOptionalAttendees(e.target.value)}
             />
-            <TextField
-              size="small"
-              label="Organizer ID"
-              type="number"
-              fullWidth
-              margin="normal"
-              required
-              value={organizerId}
-              onChange={(e) => setOrganizerId(e.target.value)}
-            />
             <Button
               size="small"
               type="submit"
               variant="contained"
               color="primary"
-            //   fullWidth
+              //   fullWidth
               sx={{ marginTop: 3 }}
             >
               Schedule Meeting

@@ -3,27 +3,55 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./HomePage.css";
 import { signinAdmin } from "../api/admin";
+import { signinCaseManager } from "../api/caseManager";
+import { signinProjectManager } from "../api/productManager";
+import { useDispatch } from "react-redux";
+import { setCaseManagerId, setProductManagerId } from "../redux/managerSlice";
 
 const HomePage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (role === "admin") {
+      signinAdmin({ username: username, password: password })
+        .then((res) => {
+          localStorage.setItem("role", role);
 
-    // console.log({});
-    signinAdmin({ username: username, password: password })
-      .then((res) => {
-        localStorage.setItem("admin_token", res.data.access_token);
-        if (role === "admin") navigate("/admin");
-        else if (role === "case_manager") navigate("/case-manager");
-        else navigate("/product-manager");
-      })
-      .catch((err) => {
-        localStorage.removeItem("admin_token");
-      });
+          localStorage.setItem("admin_token", res.data.access_token);
+          navigate("/admin");
+        })
+        .catch((err) => {
+          localStorage.removeItem("admin_token");
+          localStorage.removeItem("role");
+        });
+    } else if (role === "case_manager") {
+      signinCaseManager({ username: username, password: password })
+        .then((res) => {
+          dispatch(setCaseManagerId(res.data.id));
+          localStorage.setItem("role", role);
+          navigate("/case-manager");
+        })
+        .catch((err) => {
+          localStorage.removeItem("admin_token");
+          localStorage.removeItem("role");
+        });
+    } else {
+      signinProjectManager({ username: username, password: password })
+        .then((res) => {
+          dispatch(setProductManagerId(res.data.id));
+          localStorage.setItem("role", role);
+          navigate("/product-manager");
+        })
+        .catch((err) => {
+          localStorage.removeItem("admin_token");
+          localStorage.removeItem("role");
+        });
+    }
   };
 
   return (

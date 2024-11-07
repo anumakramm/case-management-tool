@@ -6,8 +6,7 @@ const CaseManagerDashboard = () => {
   const [cases, setCases] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [appointments, setAppointments] = useState({}); // Store appointments by client
-  const [newAppointmentDate, setNewAppointmentDate] = useState("");
+  const [appointments, setAppointments] = useState({});
 
   // Simulated fetch function to get case data
   const fetchCases = async () => {
@@ -37,18 +36,6 @@ const CaseManagerDashboard = () => {
   const handleClientClick = (client) => {
     setSelectedClient(client);
     setIsModalOpen(true);
-  };
-
-  const handleAddAppointment = () => {
-    if (newAppointmentDate) {
-      const updatedAppointments = { ...appointments };
-      if (!updatedAppointments[selectedClient]) {
-        updatedAppointments[selectedClient] = [];
-      }
-      updatedAppointments[selectedClient].push(newAppointmentDate);
-      setAppointments(updatedAppointments);
-      setNewAppointmentDate("");
-    }
   };
 
   useEffect(() => {

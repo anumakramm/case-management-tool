@@ -16,7 +16,7 @@ const styles = {
     textAlign: 'center',
     padding: '5px',
     position: 'absolute',
-    width: '100%',
+    width: '99%',
     bottom: 0,
   },
 };

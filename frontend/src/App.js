@@ -8,7 +8,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import CaseManagerDashboard from "./components/CaseManagerDashboard";
 import HomePage from "./components/HomePage";
 import RegistrationPage from "./components/RegisterPage";
-import Navbar from "./components/navbar";
+import ProtectedRoute from "./components/protectedRoutes";
 
 function App() {
   return (
@@ -19,12 +19,25 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/case-manager" element={<CaseManagerDashboard />} />
+          {/* Protected Routes for Admin */}
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+          </Route>
+
+          {/* Protected Routes for Case Manager */}
+          <Route element={<ProtectedRoute allowedRoles={["case_manager"]} />}>
+            <Route path="/case-manager" element={<CaseManagerDashboard />} />
+          </Route>
+
+          {/* Protected Routes for Product Manager */}
           <Route
-            path="/product-manager"
-            element={<ProductManagerDashboard />}
-          />
+            element={<ProtectedRoute allowedRoles={["product_manager"]} />}
+          >
+            <Route
+              path="/product-manager"
+              element={<ProductManagerDashboard />}
+            />
+          </Route>
         </Routes>
       </main>
       <Footer />
