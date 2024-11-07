@@ -31,7 +31,8 @@ table thead {
     color: white;
 }
 
-table th, table td {
+table th,
+table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
@@ -71,6 +72,8 @@ table td button:hover {
 }
 
 .modal-content {
+    height: 60vh;
+    overflow-y: auto;
     width: 90%;
     max-width: 500px;
     background: #fff;
@@ -86,6 +89,7 @@ table td button:hover {
         transform: translateY(-50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -121,7 +125,6 @@ table td button:hover {
 
 .modal-content button {
     padding: 10px 20px;
-    margin-top: 15px;
     border: none;
     border-radius: 4px;
     font-size: 1rem;
@@ -146,4 +149,13 @@ table td button:hover {
 
 .modal-content button:last-of-type:hover {
     background: #c0c0c0;
+}
+
+.date-form-field {
+    width: -webkit-fill-available !important;
+}
+
+.close-button {
+    margin-top: 1rem;
+    width: 40%;
 }
