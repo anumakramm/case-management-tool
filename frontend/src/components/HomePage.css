@@ -1,0 +1,85 @@
+/* HomePage.css */
+
+.homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f6f8;
+  font-family: Arial, sans-serif;
+  margin: 3rem;
+}
+
+.homepage h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.homepage form {
+  background-color: #fff;
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.homepage label {
+  display: block;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.homepage input[type="text"],
+.homepage input[type="password"],
+.homepage select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.homepage input[type="text"]:focus,
+.homepage input[type="password"]:focus,
+.homepage select:focus {
+  border-color: #4caf50;
+}
+
+.homepage button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.homepage button:hover {
+  background-color: #45a049;
+}
+
+.homepage p {
+  margin-top: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.homepage p a {
+  color: #4caf50;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.homepage p a:hover {
+  color: #388e3c;
+}

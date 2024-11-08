@@ -1,0 +1,165 @@
+/* AdminDashboard.css */
+
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    /* min-height: 100vh; */
+  }
+  
+  .admin-dashboard h1 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: max-content;
+  }
+  
+  .btn-success {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .btn-success:hover {
+    background-color: #45a049;
+  }
+  
+  .btn-info {
+    background-color: #2196f3;
+    color: #fff;
+  }
+  
+  .btn-info:hover {
+    background-color: #1976d2;
+  }
+  
+  .btn-warning {
+    background-color: #ff9800;
+    color: #fff;
+  }
+  
+  .btn-warning:hover {
+    background-color: #fb8c00;
+  }
+  
+  /* Modal Styling */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* right: 0;
+    bottom: 0; */
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    padding: 1.5rem; /* Reduced padding */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); ;
+    width: 100%;
+    height: fit-content;
+    min-width: max-content; /* Reduced max-width */
+    max-width: 40%;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+  }
+  
+  .modal h2 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    width: -webkit-fill-available;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+    width: max-content;
+  }
+  
+  .form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input[type="text"]:focus {
+    border-color: #2196f3;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  .modal-buttons .btn {
+    max-width: max-content;
+    margin: 3px;
+  }
+  
+  .btn-primary {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #388e3c;
+  }
+  
+  .btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #c2c2c2;
+  }
+  
+  /* Snackbar Styling */
+  .snackbar {
+    z-index: 2000;
+  }
+  

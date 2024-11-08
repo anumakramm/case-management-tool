@@ -14,9 +14,9 @@ const styles = {
     backgroundColor: '#282c34',
     color: 'white',
     textAlign: 'center',
-    padding: '20px',
-    position: 'relative',
-    width: '100%',
+    padding: '5px',
+    position: 'absolute',
+    width: '99%',
     bottom: 0,
   },
 };
