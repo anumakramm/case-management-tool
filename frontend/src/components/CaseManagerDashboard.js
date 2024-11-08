@@ -24,6 +24,7 @@ const CaseManagerDashboard = () => {
 
   const handleClientClick = (client) => {
     setSelectedClient(client);
+    setExpandedRow(null);
     setIsModalOpen(true);
   };
 
