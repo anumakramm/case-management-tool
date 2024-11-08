@@ -1,5 +1,5 @@
 import api from "./api";
 
-export function AddClient (data) {
+export function addClient (data) {
     return api.post('/users/', data)
 }

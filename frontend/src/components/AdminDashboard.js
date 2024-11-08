@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import "./AdminDashboard.css";
-import { AddClient } from "../api/client";
+import { addProductManager } from "../api/productManager";
 
 const Modal = ({
   isOpen,
@@ -21,7 +21,10 @@ const Modal = ({
 
   return (
     <div className="modal-overlay">
-      <div className="modal centered-modal" style={{ top: "auto", left: "auto" }}>
+      <div
+        className="modal centered-modal"
+        style={{ top: "auto", left: "auto" }}
+      >
         <h2>{formTitle}</h2>
         <form onSubmit={onSubmit} className="form-container">
           {Object.keys(formData).map((key) => (
@@ -74,23 +77,13 @@ const AdminDashboard = () => {
     setIsModalOpen(true);
   };
 
-  useEffect(() => {
-    // do these type of api calls but with dunamic data with help of form
-    // AddClient(
-    //     {
-    //         name: "XYZT",
-    //         email: "xyzt@gmail.com"
-    //     }).then((res) => { console.log(res) }).catch((err) => { console.log(err) })
-  }, []);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`Adding ${formType}:`, formData);
 
     // Set custom Snackbar message based on formType
     let message = "";
     if (formType === "product-manager") {
-      message = "Product Manager added successfully!";
+      addProductManager({ name: formData.name, email: formData.email });
     } else if (formType === "case-manager") {
       message = "Case Manager added successfully!";
     } else if (formType === "client") {

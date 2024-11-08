@@ -1,36 +1,25 @@
 import React, { useEffect, useState } from "react";
 import "./CaseManagerDashboard.css"; // Import the CSS styles
 import ScheduleMeeting from "./meeting";
+import { getCaseMangersUsers } from "../api/caseManager";
+import { useSelector } from "react-redux";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import MeetingListing from "./meeting/listing";
+import { Button } from "@mui/material";
 
 const CaseManagerDashboard = () => {
   const [cases, setCases] = useState([]);
+  const [expandedRow, setExpandedRow] = useState(null);
   const [selectedClient, setSelectedClient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [appointments, setAppointments] = useState({});
-
+  const caseManagerId = useSelector((state) => state.manager.caseManagerId);
   // Simulated fetch function to get case data
   const fetchCases = async () => {
-    const data = [
-      {
-        caseId: "C001",
-        title: "Client A Case",
-        client: "Client A",
-        description: "Description of Client A case.",
-        status: "In Progress",
-        startDate: "2024-01-10",
-        endDate: "2024-06-10",
-      },
-      {
-        caseId: "C002",
-        title: "Client B Case",
-        client: "Client B",
-        description: "Description of Client B case.",
-        status: "Completed",
-        startDate: "2024-03-15",
-        endDate: "2024-09-15",
-      },
-    ];
-    setCases(data);
+    if (caseManagerId) {
+      getCaseMangersUsers(caseManagerId).then((res) => {
+        setCases(res.data.users);
+      });
+    }
   };
 
   const handleClientClick = (client) => {
@@ -38,9 +27,17 @@ const CaseManagerDashboard = () => {
     setIsModalOpen(true);
   };
 
+  const handleRowClick = (caseItem) => {
+    if (expandedRow === caseItem.id) {
+      setExpandedRow(null); // Collapse if already expanded
+    } else {
+      setExpandedRow(caseItem.id); // Expand the clicked row
+    }
+  };
+
   useEffect(() => {
     fetchCases();
-  }, []);
+  }, [caseManagerId]);
 
   return (
     <div>
@@ -48,30 +45,50 @@ const CaseManagerDashboard = () => {
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>Case ID</th>
-            <th>Title</th>
-            <th>Client</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Start Date</th>
-            <th>End Date</th>
+            <th>Client Name</th>
+            <th>Email</th>
+            <th>Add New Meeting</th>
           </tr>
         </thead>
         <tbody>
           {cases.map((caseItem) => (
-            <tr key={caseItem.caseId}>
-              <td>{caseItem.caseId}</td>
-              <td>{caseItem.title}</td>
-              <td>
-                <button onClick={() => handleClientClick(caseItem.client)}>
-                  {caseItem.client}
-                </button>
-              </td>
-              <td>{caseItem.description}</td>
-              <td>{caseItem.status}</td>
-              <td>{caseItem.startDate}</td>
-              <td>{caseItem.endDate}</td>
-            </tr>
+            <>
+              <tr key={caseItem.id}>
+                <td>
+                  {expandedRow && expandedRow === caseItem.id ? (
+                    <KeyboardArrowUp onClick={() => handleRowClick(caseItem)} />
+                  ) : (
+                    <KeyboardArrowDown
+                      onClick={() => handleRowClick(caseItem)}
+                    />
+                  )}
+                </td>
+                <td>{caseItem.id}</td>
+                <td>{caseItem.name}</td>
+                <td>{caseItem.email}</td>
+                <td>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => handleClientClick(caseItem)}
+                  >
+                    Add Meeting
+                  </Button>
+                </td>
+              </tr>
+              {expandedRow === caseItem.id && (
+                <tr className="expanded-row">
+                  <td colSpan="5">
+                    <MeetingListing
+                      caseManagerId={caseManagerId}
+                      caseEmail={caseItem.email}
+                    />
+                  </td>
+                </tr>
+              )}
+            </>
           ))}
         </tbody>
       </table>
@@ -79,20 +96,14 @@ const CaseManagerDashboard = () => {
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2>Pending Appointments for {selectedClient}</h2>
-            <ul>
-              {appointments[selectedClient] &&
-              appointments[selectedClient].length > 0 ? (
-                appointments[selectedClient].map((appointment, index) => (
-                  <li key={index}>{appointment}</li>
-                ))
-              ) : (
-                <li>No pending appointments</li>
-              )}
-            </ul>
             <h3>Add New Appointment</h3>
-            <ScheduleMeeting />
-            <button className="close-button" onClick={() => setIsModalOpen(false)}>Close</button>
+            <ScheduleMeeting client={selectedClient} />
+            <button
+              className="close-button"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}

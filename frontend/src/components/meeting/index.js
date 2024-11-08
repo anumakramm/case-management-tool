@@ -6,15 +6,19 @@ import { createMeeting } from "../../api/caseManager";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector } from "react-redux";
+import { CaseManagementSnackbar } from "../../snackbar";
 
-const ScheduleMeeting = () => {
+const ScheduleMeeting = ({client}) => {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [startTime, setStartTime] = useState(dayjs());
   const [duration, setDuration] = useState("");
-  const [requiredAttendees, setRequiredAttendees] = useState("");
+  const [requiredAttendees, setRequiredAttendees] = useState(client.email);
   const [optionalAttendees, setOptionalAttendees] = useState("");
   const caseManagerId = useSelector((state) => state.manager.caseManagerId);
+  const [snackbarMessage, setSnackbarMessage] = useState(); // New state for Snackbar message
+  // 'success' | 'info' | 'warning' | 'error'
+  const [severity, setSeverity] = useState("success");
 
   const handleScheduleMeeting = async (e) => {
     e.preventDefault();
@@ -34,9 +38,14 @@ const ScheduleMeeting = () => {
         alert("Meeting scheduled successfully!");
       })
       .catch((err) => {
-        console.log(err);
+        setSeverity("error");
+        setSnackbarMessage(err.response.data.detail);
       });
   };
+
+  function handleSnackbar() {
+    setSnackbarMessage(undefined);
+  }
 
   return (
     <Container maxWidth="sm">
@@ -91,17 +100,19 @@ const ScheduleMeeting = () => {
               onChange={(e) => setDuration(e.target.value)}
             />
             <TextField
+              disabled
               size="small"
-              label="Required Attendees (comma-separated emails)"
+              label="Required Attendee"
               fullWidth
               margin="normal"
               required
-              value={requiredAttendees}
-              onChange={(e) => setRequiredAttendees(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              value={client.email}
+              onChange={(e) => setRequiredAttendees(client.email)}
             />
             <TextField
               size="small"
-              label="Optional Attendees (comma-separated emails)"
+              label="Optional Attendee"
               fullWidth
               margin="normal"
               value={optionalAttendees}
@@ -120,6 +131,14 @@ const ScheduleMeeting = () => {
           </form>
         </LocalizationProvider>
       </Box>
+      {snackbarMessage && (
+        <CaseManagementSnackbar
+          snackbarMessage={snackbarMessage}
+          timeout={3000}
+          handleSnackbar={handleSnackbar}
+          severity={severity}
+        />
+      )}
     </Container>
   );
 };
