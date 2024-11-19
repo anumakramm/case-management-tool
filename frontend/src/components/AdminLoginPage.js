@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { signinAdmin } from "../api/admin"; // Correct the import to match the actual API function
+import { signinAdmin } from "../api/admin";
 import { setUserId } from "../redux/managerSlice";
-import "./HomePage.css"; // Reuse the same styles as HomePage
+import "./HomePage.css";
 
 const AdminLoginPage = () => {
   const [username, setUsername] = useState("");
@@ -13,22 +13,21 @@ const AdminLoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Call the correct API function for admin login
-    signinAdmin({ username: username, password: password })
+
+    signinAdmin({ username, password })
       .then((res) => {
-        // Dispatch user ID to the Redux store
-        dispatch(setUserId(res.data.user.id));
-        localStorage.setItem("role", res.data.user.role);
-        
-        // Check if the user is an admin and navigate accordingly
-        if (res.data.user.role === "admin") {
-          navigate("/admin-dashboard"); // Redirect to admin dashboard
-        } else {
-          alert("Access denied! Only admins can log in.");
-        }
-      })
-      .catch((err) => {
+        console.log("Response:", res); // Debugging response
+        localStorage.setItem("admin_token", res.data.access_token);
+      
+          // dispatch(setUserId(res.data.user.id));
+          localStorage.setItem("role", "admin");
+
+          // if (res.data.user.role === "admin") {
+            navigate("/admin");
+          // } else {
+          //   alert("Access denied! Only admins can log in.");
+          // }
+      }).catch((err) => {
         localStorage.removeItem("admin_token");
         localStorage.removeItem("role");
         alert("Invalid credentials or an error occurred.");

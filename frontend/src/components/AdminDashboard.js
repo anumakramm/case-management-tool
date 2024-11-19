@@ -72,7 +72,7 @@ const AdminDashboard = () => {
     setFormData({
       name: "",
       email: "",
-      role: type === "product-manager" ? "Product Manager" : "Case Manager",
+      role: type,
     });
     setIsModalOpen(true);
   };
@@ -82,9 +82,9 @@ const AdminDashboard = () => {
 
     // Set custom Snackbar message based on formType
     let message = "";
-    if (formType === "product-manager") {
-      addProductManager({ name: formData.name, email: formData.email });
-    } else if (formType === "case-manager") {
+    if (formType === "product_manager") {
+      addProductManager({ name: formData.name, email: formData.email, role: formData.role });
+    } else if (formType === "case_manager") {
       message = "Case Manager added successfully!";
     } else if (formType === "client") {
       message = "Client added successfully!";
@@ -107,13 +107,13 @@ const AdminDashboard = () => {
         <div className="button-container">
           <button
             className="btn btn-success"
-            onClick={() => handleOpenModal("product-manager")}
+            onClick={() => handleOpenModal("product_manager")}
           >
             Add Product Manager
           </button>
           <button
             className="btn btn-info"
-            onClick={() => handleOpenModal("case-manager")}
+            onClick={() => handleOpenModal("case_manager")}
           >
             Add Case Manager
           </button>

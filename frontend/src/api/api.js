@@ -11,6 +11,7 @@ api.interceptors.request.use(
   (config) => {
     // Get the token from localStorage or any storage you prefer
     const token = localStorage.getItem('admin_token');
+    console.log("Token: ", token)
     if (token) {
       // Set the Authorization header with the token
       config.headers['Authorization'] = `Bearer ${token}`;

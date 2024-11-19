@@ -4,7 +4,7 @@ export function getAllCaseMangers() {
   return api.get("/case_manager/");
 }
 export function addCaseManagers(data) {
-  return api.post("/case_manager/", data);
+  return api.post("/users/", data);
 }
 
 export function signinCaseManager(data) {
