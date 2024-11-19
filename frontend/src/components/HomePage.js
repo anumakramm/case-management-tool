@@ -18,6 +18,8 @@ const HomePage = () => {
         dispatch(setUserId(res.data.user.id));
         localStorage.setItem("role", res.data.user.role);
         if (res.data.user.role === "admin") {
+          localStorage.setItem("admin_token", res.data.access_token);
+          console.log("localstorage: ", localStorage.getItem("admin_token"))
           navigate("/admin");
         } else if (res.data.user.role === "product_manager") {
           navigate("/product-manager");

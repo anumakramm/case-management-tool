@@ -1,5 +1,6 @@
 import api from './api'
 
 export function signinAdmin (data) {
-    return api.post('/admin/token', data)
+   console.log(data)
+   return api.post('/users/admin/token', data)
 }

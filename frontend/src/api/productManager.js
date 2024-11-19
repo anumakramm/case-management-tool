@@ -1,7 +1,7 @@
 import api from "./api";
 
 export function addProductManager(data) {
-  return api.post("/product_manager/", data);
+  return api.post("/users/", data);
 }
 
 export function userSignIn(data) {
