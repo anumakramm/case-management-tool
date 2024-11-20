@@ -4,8 +4,8 @@ export function addProductManager(data) {
   return api.post("/product_manager/", data);
 }
 
-export function signinProjectManager(data) {
-  return api.post("/product_manager/signin", data);
+export function userSignIn(data) {
+  return api.post("/users/signin", data);
 }
 
 export function linkCaseManagerAndClient(pm_id, cm_id, clients) {

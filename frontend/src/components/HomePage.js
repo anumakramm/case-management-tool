@@ -2,56 +2,35 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./HomePage.css";
-import { signinAdmin } from "../api/admin";
-import { signinCaseManager } from "../api/caseManager";
-import { signinProjectManager } from "../api/productManager";
+import { userSignIn } from "../api/productManager";
 import { useDispatch } from "react-redux";
-import { setCaseManagerId, setProductManagerId } from "../redux/managerSlice";
+import { userId, setUserId } from "../redux/managerSlice";
 
 const HomePage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (role === "admin") {
-      signinAdmin({ username: username, password: password })
-        .then((res) => {
-          localStorage.setItem("role", role);
-
-          localStorage.setItem("admin_token", res.data.access_token);
+    userSignIn({ username: username, password: password })
+      .then((res) => {
+        dispatch(setUserId(res.data.user.id));
+        localStorage.setItem("role", res.data.user.role);
+        if (res.data.user.role === "admin") {
           navigate("/admin");
-        })
-        .catch((err) => {
-          localStorage.removeItem("admin_token");
-          localStorage.removeItem("role");
-        });
-    } else if (role === "case_manager") {
-      signinCaseManager({ username: username, password: password })
-        .then((res) => {
-          dispatch(setCaseManagerId(res.data.id));
-          localStorage.setItem("role", role);
-          navigate("/case-manager");
-        })
-        .catch((err) => {
-          localStorage.removeItem("admin_token");
-          localStorage.removeItem("role");
-        });
-    } else {
-      signinProjectManager({ username: username, password: password })
-        .then((res) => {
-          dispatch(setProductManagerId(res.data.id));
-          localStorage.setItem("role", role);
+        } else if (res.data.user.role === "product_manager") {
           navigate("/product-manager");
-        })
-        .catch((err) => {
-          localStorage.removeItem("admin_token");
-          localStorage.removeItem("role");
-        });
-    }
+        } else if (res.data.user.role === "case_manager") {
+          navigate("/case-manager");
+        } else {
+        }
+      })
+      .catch((err) => {
+        localStorage.removeItem("admin_token");
+        localStorage.removeItem("role");
+      });
   };
 
   return (
@@ -77,20 +56,6 @@ const HomePage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label htmlFor="role">Select Role</label>
-          <select
-            id="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            required
-          >
-            <option value="">Select a role</option>
-            <option value="admin">Admin</option>
-            <option value="case_manager">Case Manager</option>
-            <option value="product_manager">Product Manager</option>
-          </select>
         </div>
         <button type="submit">Log In</button>
       </form>

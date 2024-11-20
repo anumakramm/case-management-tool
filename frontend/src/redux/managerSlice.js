@@ -1,33 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  caseManagerId: null, // Default is no case manager logged in
-  productManagerId: null,
+  userId: null,
 };
 
-const managerSlice = createSlice({
+const userSlice = createSlice({
   name: "manager",
   initialState,
   reducers: {
-    setCaseManagerId: (state, action) => {
-      state.caseManagerId = action.payload;
+    setUserId: (state, action) => {
+      state.userId = action.payload;
     },
-    clearCaseManagerId: (state) => {
-      state.caseManagerId = null;
-    },
-    setProductManagerId: (state, action) => {
-      state.productManagerId = action.payload;
-    },
-    clearProductManagerId: (state) => {
-      state.productManagerId = null;
+    clearUserId: (state) => {
+      state.userId = null;
     },
   },
 });
 
 export const {
-  setCaseManagerId,
-  clearCaseManagerId,
-  setProductManagerId,
-  clearProductManagerId,
-} = managerSlice.actions;
-export default managerSlice.reducer;
+  setUserId,
+  clearUserId,
+} = userSlice.actions;
+export default userSlice.reducer;

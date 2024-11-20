@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import managerReducer from "./managerSlice";
+import userReducer from "./managerSlice";
 
 const store = configureStore({
   reducer: {
-    manager: managerReducer, // Add the caseManager slice reducer
+    manager: userReducer, // Add the caseManager slice reducer
   },
 });
 
