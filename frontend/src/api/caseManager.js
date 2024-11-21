@@ -1,7 +1,7 @@
 import api from "./api";
 
 export function getAllCaseMangers() {
-  return api.get("/case_manager/");
+  return api.get("/users/case_manager/all");
 }
 export function addCaseManagers(data) {
   return api.post("/users/", data);
