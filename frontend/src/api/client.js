@@ -5,5 +5,5 @@ export function addClient(data) {
 }
 
 export function getAllClients() {
-  return api.get("/users/");
+  return api.get("users/clients/all");
 }

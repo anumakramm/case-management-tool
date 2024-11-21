@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import "./ProductManagerDashboard.css";
-import axios from "axios";
 import { getAllCaseMangers } from "../api/caseManager";
 import { getAllClients } from "../api/client";
 import { useSelector } from "react-redux";
@@ -15,67 +14,59 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const ProductManagerDashboard = () => {
-  // State for case managers, clients, cases, selected case manager, and selected clients
   const [caseManagers, setCaseManagers] = useState([]);
   const [clients, setClients] = useState([]);
-  // const [cases, setCases] = useState([]);
   const [selectedCaseManager, setSelectedCaseManager] = useState("");
   const [selectedClients, setSelectedClients] = useState([]);
   const productManagerId = useSelector(
     (state) => state.manager.productManagerId
   );
-  // Fetch data from API on component mount
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        getAllCaseMangers().then((res) => {
-          setCaseManagers(res.data);
-        });
-        getClients();
+        const caseManagerResponse = await getAllCaseMangers();
+        setCaseManagers(caseManagerResponse.data);
+
+        const clientResponse = await getAllClients(); // Use getAllClients function here
+        setClients(clientResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
     fetchData();
   }, []);
 
-  function getClients() {
-    getAllClients().then((res) => {
-      setClients(res.data);
-    });
-  }
-
-  // Handle case manager selection
   const handleCaseManagerChange = (e) => {
     setSelectedCaseManager(e.target.value);
     setSelectedClients([]); // Clear previously selected clients
   };
 
-  // Handle client selection
   const handleClientSelection = (event, newValue) => {
     setSelectedClients(newValue.map((n) => Number(n)));
   };
 
-  // Assign selected clients to the selected case manager
-  const handleAssignClients = () => {
-    linkCaseManagerAndClient(
-      productManagerId,
-      selectedCaseManager,
-      selectedClients
-    ).then((res) => {
-      getClients();
-    });
-    setSelectedCaseManager("");
-    setSelectedClients([]); // Clear selected clients after assignment
+  const handleAssignClients = async () => {
+    try {
+      await linkCaseManagerAndClient(
+        productManagerId,
+        selectedCaseManager,
+        selectedClients
+      );
+
+      setSelectedCaseManager("");
+      setSelectedClients([]); // Clear selection after assignment
+    } catch (error) {
+      console.error("Error assigning clients:", error);
+    }
   };
 
   return (
     <div className="dashboard-container">
       <h1>Product Manager Dashboard</h1>
-
       <h2>Manage Cases: </h2>
       <div className="dropdown-panel">
-        {/* Case Manager Dropdown */}
         <div className="dropdown-panel-item">
           <label>Select Case Manager: </label>
           <select
@@ -91,7 +82,6 @@ const ProductManagerDashboard = () => {
           </select>
         </div>
 
-        {/* Client Autocomplete with Multi-Select */}
         <div className="dropdown-panel-item">
           <label>Select Clients: </label>
           <Autocomplete
@@ -125,7 +115,6 @@ const ProductManagerDashboard = () => {
           />
         </div>
 
-        {/* Assign Button */}
         <button
           onClick={handleAssignClients}
           className="ok-button"
@@ -135,7 +124,6 @@ const ProductManagerDashboard = () => {
         </button>
       </div>
 
-      {/* Display Cases Table */}
       <h2>Active Cases:</h2>
       <div className="table-container">
         <table>
