@@ -1,85 +1,147 @@
-/* HomePage.css */
-
-.homepage {
+/* General container styling */
+.homepage-container {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  background-color: #f4f6f8;
-  font-family: Arial, sans-serif;
-  margin: 3rem;
+  height: 100vh;
+  padding: 0 50px;
+  background-color: #f9fafc;
 }
 
-.homepage h2 {
+.illustration-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.illustration-image {
+  max-width: 90%;
+}
+
+.form-container {
+  flex: 1;
+  max-width: 400px;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-title {
+  font-size: 1.8rem;
+  font-weight: bold;
   color: #333;
-  font-size: 24px;
+}
+
+.welcome-subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 10px 0 20px;
+}
+
+.login-form .form-group {
   margin-bottom: 20px;
 }
 
-.homepage form {
-  background-color: #fff;
-  padding: 30px 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-}
-
-.homepage label {
+.form-label {
   display: block;
-  font-size: 14px;
-  color: #555;
+  font-size: 0.9rem;
+  color: #495057;
   margin-bottom: 5px;
 }
 
-.homepage input[type="text"],
-.homepage input[type="password"],
-.homepage select {
+.form-input {
   width: 100%;
   padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
   border-radius: 4px;
-  border: 1px solid #ccc;
-  margin-bottom: 15px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s ease;
 }
 
-.homepage input[type="text"]:focus,
-.homepage input[type="password"]:focus,
-.homepage select:focus {
-  border-color: #4caf50;
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.homepage button {
+.remember-label {
+  font-size: 0.85rem;
+  color: #495057;
+  margin-left: 5px;
+}
+
+.forgot-password {
+  font-size: 0.85rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.submit-button {
   width: 100%;
   padding: 12px;
-  background-color: #4caf50;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #7367f0;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
-.homepage button:hover {
-  background-color: #45a049;
+.submit-button:hover {
+  background-color: #5a54d7;
 }
 
-.homepage p {
-  margin-top: 20px;
-  color: #666;
-  font-size: 14px;
+.register-prompt {
+  margin: 20px 0;
+  text-align: center;
+  font-size: 0.9rem;
 }
 
-.homepage p a {
-  color: #4caf50;
+.register-prompt a {
+  color: #007bff;
   text-decoration: none;
-  transition: color 0.3s ease;
 }
 
-.homepage p a:hover {
-  color: #388e3c;
+.register-prompt a:hover {
+  text-decoration: underline;
+}
+
+.divider {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin: 20px 0;
+}
+
+.divider span {
+  background-color: #f9fafc;
+  padding: 0 10px;
+}
+
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.social-button {
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  color: #fff;
+  background-color: #6c757d;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.social-button:hover {
+  background-color: #495057;
 }
