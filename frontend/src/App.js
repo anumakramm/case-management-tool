@@ -1,12 +1,13 @@
 // App.js
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import AdminDashboard from "./components/AdminDashboard";
+import AdminLoginPage from "./components/AdminLoginPage";
+import CaseManagerDashboard from "./components/CaseManagerDashboard";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
-import ProductManagerDashboard from "./components/ProductManagerDashboard";
-import AdminDashboard from "./components/AdminDashboard";
-import CaseManagerDashboard from "./components/CaseManagerDashboard";
 import HomePage from "./components/HomePage";
+import ProductManagerDashboard from "./components/ProductManagerDashboard";
 import RegistrationPage from "./components/RegisterPage";
 import ProtectedRoute from "./components/protectedRoutes";
 
@@ -23,6 +24,7 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route path="/admin" element={<AdminDashboard />} />
           </Route>
+          <Route path="/admin-login" element={<AdminLoginPage />} />
 
           {/* Protected Routes for Case Manager */}
           <Route element={<ProtectedRoute allowedRoles={["case_manager"]} />}>

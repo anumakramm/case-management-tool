@@ -39,20 +39,7 @@ const RegistrationPage = () => {
               required
             />
           </div>
-          <div>
-            <label htmlFor="role">Role</label>
-            <select
-              id="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              required
-            >
-              <option value="">Select a role</option>
-              <option value="admin">Admin</option>
-              <option value="case_manager">Case Manager</option>
-              <option value="product_manager">Product Manager</option>
-            </select>
-          </div>
+          
           <button type="submit">Register</button>
         </form>
       </div>
