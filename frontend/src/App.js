@@ -4,8 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminLoginPage from "./components/AdminLoginPage";
 import CaseManagerDashboard from "./components/CaseManagerDashboard";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
+
 import HomePage from "./components/HomePage";
 import ProductManagerDashboard from "./components/ProductManagerDashboard";
 import RegistrationPage from "./components/RegisterPage";
@@ -14,7 +13,6 @@ import ProtectedRoute from "./components/protectedRoutes";
 function App() {
   return (
     <Router>
-      <Header />
       {/* <Navbar /> */}
       <main style={styles.mainContent}>
         <Routes>
@@ -42,7 +40,6 @@ function App() {
           </Route>
         </Routes>
       </main>
-      <Footer />
     </Router>
   );
 }
