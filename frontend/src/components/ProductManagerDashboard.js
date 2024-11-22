@@ -173,33 +173,31 @@ const ProductManagerDashboard = () => {
           </div>
         )}
 
-{selectedSection === "activeCases" && (
-  <div className="cards-container">
-    {activeCases.map((activeCase) => {
-      // Extract client and case manager details
-      const client = activeCase.client;  // Client data for the case
-      const caseManager = activeCase.case_manager;  // Case manager data for the case
+        {selectedSection === "activeCases" && (
+          <div className="cards-container">
+            {activeCases.map((activeCase) => {
+              // Extract client and case manager details
+              const client = activeCase.client;  // Client data for the case
+              const caseManager = activeCase.case_manager;  // Case manager data for the case
 
-      return (
-        <div className="product-card" key={client.id}>
-          {/* First row: Display client name as case name */}
-          <div className="case-name-row">
-            <h3>Case: {client.name}</h3>  {/* Use client name as case name */}
+              return (
+                <div className="product-card" key={client.id}>
+                  {/* First row: Display client name as case name */}
+                  <div className="case-name-row">
+                    <h3>Case: {client.name}</h3>  {/* Use client name as case name */}
+                  </div>
+
+                  {/* Second row: Display assigned case manager or "Unassigned" */}
+                  <div className="assigned-to-row">
+                    <span>
+                      Assigned To: {caseManager ? caseManager.name : "Unassigned"}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-
-          {/* Second row: Display assigned case manager or "Unassigned" */}
-          <div className="assigned-to-row">
-            <span>
-              Assigned To: {caseManager ? caseManager.name : "Unassigned"}
-            </span>
-          </div>
-        </div>
-      );
-    })}
-  </div>
-)}
-
-
+        )}
       </div>
     </div>
   );
