@@ -1,34 +1,28 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import "./ProductManagerDashboard.css";
+import Header from "../components/Header";
 import { getAllCaseMangers } from "../api/caseManager";
 import { getAllClients } from "../api/client";
-import { useSelector } from "react-redux";
 import { linkCaseManagerAndClient } from "../api/productManager";
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const ProductManagerDashboard = () => {
   const [caseManagers, setCaseManagers] = useState([]);
   const [clients, setClients] = useState([]);
-  const [selectedCaseManager, setSelectedCaseManager] = useState("");
+  const [selectedSection, setSelectedSection] = useState("linkCases"); // Sidebar toggle
+  const [selectedCaseManager, setSelectedCaseManager] = useState(null);
   const [selectedClients, setSelectedClients] = useState([]);
-  const productManagerId = useSelector(
-    (state) => state.manager.productManagerId
-  );
 
+  // Fetch data for Case Managers and Clients
   useEffect(() => {
     const fetchData = async () => {
       try {
         const caseManagerResponse = await getAllCaseMangers();
         setCaseManagers(caseManagerResponse.data);
 
-        const clientResponse = await getAllClients(); // Use getAllClients function here
+        const clientResponse = await getAllClients();
         setClients(clientResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -38,11 +32,6 @@ const ProductManagerDashboard = () => {
     fetchData();
   }, []);
 
-  const handleCaseManagerChange = (e) => {
-    setSelectedCaseManager(e.target.value);
-    setSelectedClients([]); // Clear previously selected clients
-  };
-
   const handleClientSelection = (event, newValue) => {
     setSelectedClients(newValue.map((n) => Number(n)));
   };
@@ -50,105 +39,122 @@ const ProductManagerDashboard = () => {
   const handleAssignClients = async () => {
     try {
       await linkCaseManagerAndClient(
-        productManagerId,
-        selectedCaseManager,
+        selectedCaseManager?.id,
         selectedClients
       );
-
-      setSelectedCaseManager("");
-      setSelectedClients([]); // Clear selection after assignment
+      setSelectedCaseManager(null);
+      setSelectedClients([]);
     } catch (error) {
       console.error("Error assigning clients:", error);
     }
   };
 
   return (
-    <div className="dashboard-container">
-      <h1>Product Manager Dashboard</h1>
-      <h2>Manage Cases: </h2>
-      <div className="dropdown-panel">
-        <div className="dropdown-panel-item">
-          <label>Select Case Manager: </label>
-          <select
-            value={selectedCaseManager}
-            onChange={handleCaseManagerChange}
-          >
-            <option value="">Select Case Manager</option>
-            {caseManagers.map((manager) => (
-              <option key={manager.id} value={manager.id}>
-                {manager.name}
-              </option>
-            ))}
-          </select>
-        </div>
+    <div className="product-dashboard-container">
+      <Header title="Product Manager Dashboard" />
 
-        <div className="dropdown-panel-item">
-          <label>Select Clients: </label>
-          <Autocomplete
-            multiple
-            options={clients.map((c) => String(c.id))}
-            disableCloseOnSelect
-            value={selectedClients.map((s) => String(s))}
-            onChange={handleClientSelection}
-            getOptionLabel={(option) =>
-              clients.find((c) => c.id == option).email
-            }
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  checked={selected}
-                  style={{ marginRight: 8 }}
-                />
-                {clients.find((c) => c.id == option).email}
-              </li>
-            )}
-            style={{ width: 300 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select Clients"
-                placeholder="Clients"
-              />
-            )}
-          />
-        </div>
-
-        <button
-          onClick={handleAssignClients}
-          className="ok-button"
-          style={{ marginLeft: "20px" }}
+      {/* Sidebar */}
+      <div className="product-sidebar">
+        <div
+          className={`sidebar-item ${
+            selectedSection === "linkCases" ? "active" : ""
+          }`}
+          onClick={() => setSelectedSection("linkCases")}
         >
-          OK
-        </button>
+          Link Cases
+        </div>
+        <div
+          className={`sidebar-item ${
+            selectedSection === "activeCases" ? "active" : ""
+          }`}
+          onClick={() => setSelectedSection("activeCases")}
+        >
+          Active Cases
+        </div>
       </div>
 
-      <h2>Active Cases:</h2>
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Client ID</th>
-              <th>Client Name</th>
-              <th>Client Email</th>
-              <th>Assigned To</th>
-            </tr>
-          </thead>
-          <tbody>
-            {clients.map((caseItem) => (
-              <tr key={caseItem.id}>
-                <td>{caseItem.id}</td>
-                <td>{caseItem.name}</td>
-                <td>{caseItem.email}</td>
-                <td>
-                  {caseManagers.find((c) => c.id == caseItem.case_manager_id)
-                    ?.name || "Unassigned"}
-                </td>
-              </tr>
+      {/* Main Content */}
+      <div className="product-main-content">
+        {selectedSection === "linkCases" && (
+          <div className="dropdown-panel">
+            {/* Select Case Manager */}
+            <div className="dropdown-panel-item">
+              <label>Select Case Manager:</label>
+              <Autocomplete
+                options={caseManagers}
+                getOptionLabel={(option) => option.name}
+                value={selectedCaseManager}
+                onChange={(event, newValue) =>
+                  setSelectedCaseManager(newValue)
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Case Manager"
+                    placeholder="Case Manager"
+                  />
+                )}
+                style={{ width: 300 }}
+              />
+            </div>
+
+            {/* Select Clients */}
+            <div className="dropdown-panel-item">
+              <label>Select Clients:</label>
+              <Autocomplete
+                multiple
+                options={clients.map((c) => String(c.id))}
+                disableCloseOnSelect
+                value={selectedClients.map((s) => String(s))}
+                onChange={handleClientSelection}
+                getOptionLabel={(option) =>
+                  clients.find((c) => c.id == option)?.email
+                }
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={<Checkbox />}
+                      checkedIcon={<Checkbox checked />}
+                      checked={selected}
+                      style={{ marginRight: 8 }}
+                    />
+                    {clients.find((c) => c.id == option)?.email}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Clients"
+                    placeholder="Clients"
+                  />
+                )}
+                style={{ width: 300 }}
+              />
+            </div>
+
+            {/* OK Button */}
+            <button onClick={handleAssignClients} className="ok-button">
+              OK
+            </button>
+          </div>
+        )}
+
+        {selectedSection === "activeCases" && (
+          <div className="cards-container">
+            {clients.map((client) => (
+              <div className="product-card" key={client.id}>
+                <h3>Product: {client.name}</h3>
+                <p>{client.email}</p>
+                <span>
+                  Assigned To:{" "}
+                  {caseManagers.find(
+                    (c) => c.id === client.case_manager_id
+                  )?.name || "Unassigned"}
+                </span>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        )}
       </div>
     </div>
   );

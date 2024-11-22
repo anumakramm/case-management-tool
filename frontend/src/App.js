@@ -61,7 +61,7 @@ const styles = {
   },
   mainContent: {
     minHeight: "80vh",
-    padding: "20px",
+    // padding: "20px",
   },
 };
 

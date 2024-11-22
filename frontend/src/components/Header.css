@@ -1,0 +1,53 @@
+/* Header Styling */
+.header {
+    position: fixed;
+    top: 0;
+    width: 98%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px; /* Adjusted padding for balanced spacing on both sides */
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px); /* Blur effect */
+    z-index: 1000;
+  }
+  
+  /* Title on Left */
+  .header-left {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .header-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #5f1a74;
+    margin: 0;
+    display: flex;
+    margin-left: 20px; /* Add slight space between the title and the left edge */
+  }
+  
+  /* Logout Button */
+  .header-right {
+    flex: 1;
+    text-align: right;
+  }
+  
+  .logout-button {
+    padding: 8px 16px;
+    background-color: #2a255d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 20px; /* Add space between the button and the right edge */
+  }
+  
+  .logout-button:hover {
+    background-color: #5a54d7;
+  }
+  
