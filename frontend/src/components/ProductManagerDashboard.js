@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -14,14 +14,12 @@ const ProductManagerDashboard = () => {
   const [selectedSection, setSelectedSection] = useState("linkCases"); // Sidebar toggle
   const [selectedCaseManager, setSelectedCaseManager] = useState(null);
   const [selectedClients, setSelectedClients] = useState([]);
-
-  // Fetch data for Case Managers and Clients
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const caseManagerResponse = await getAllCaseMangers();
         setCaseManagers(caseManagerResponse.data);
-
         const clientResponse = await getAllClients();
         setClients(clientResponse.data);
       } catch (error) {
