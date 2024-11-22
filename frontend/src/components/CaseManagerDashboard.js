@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import "./CaseManagerDashboard.css"; // Import CSS styles
 import Header from "./Header"; // Import the Header component
 import ScheduleMeeting from "./meeting";
@@ -7,6 +7,7 @@ import { getCaseMangersUsers } from "../api/caseManager"; // Import API call
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { initiateClient } from "../api/caseManager"; // Import the initiateClient function
 
 const CaseManagerDashboard = () => {
   const [clients, setClients] = useState([]); // State to store the clients assigned to the case manager
@@ -37,6 +38,27 @@ const CaseManagerDashboard = () => {
       } finally {
         setLoading(false);  // Stop loading after the API call
       }
+    }
+  };
+
+  // Function to handle client initialization
+  const handleClientInit = async (client) => {
+    if (!caseManagerId) {
+      console.error("Case Manager ID is missing");
+      return;
+    }
+
+    try {
+      // Call the initiateClient function to start the process
+      const serviceId = client.service_id; // Assuming each client has a service_id
+      const response = await initiateClient(caseManagerId, client.id, serviceId);
+      console.log("Client initialization response:", response.data);
+
+      // You can add success message or further actions based on response
+      alert(`Client ${client.name} has been initialized successfully.`);
+    } catch (error) {
+      console.error("Error initializing client:", error);
+      alert("Failed to initialize client. Please try again.");
     }
   };
 
@@ -120,7 +142,7 @@ const CaseManagerDashboard = () => {
                       variant="contained"
                       size="small"
                       className="case-add-meeting-btn"
-                      onClick={() => handleClientClick(client)}
+                      onClick={() => handleClientInit(client)}  // Call handleClientInit instead of handleClientClick
                     >
                       Initialize Client
                     </Button>

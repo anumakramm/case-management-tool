@@ -8,6 +8,7 @@ import { getAllCaseMangers } from "../api/caseManager";
 import { getAllClients } from "../api/client";
 import { getAllServices } from "../api/productManager"; // Import the correct service fetching function
 import { linkCaseManagerAndClient } from "../api/productManager";
+import { getActiveCases } from "../api/productManager"; // Import the active cases fetching function
 
 const ProductManagerDashboard = () => {
   const [caseManagers, setCaseManagers] = useState([]);
@@ -17,6 +18,7 @@ const ProductManagerDashboard = () => {
   const [selectedSection, setSelectedSection] = useState("linkCases");
   const [selectedCaseManager, setSelectedCaseManager] = useState(null);
   const [selectedClients, setSelectedClients] = useState([]);
+  const [activeCases, setActiveCases] = useState([]); // State for active cases
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,6 +29,10 @@ const ProductManagerDashboard = () => {
         setClients(clientResponse.data);
         const serviceResponse = await getAllServices(); // Fetch services
         setServices(serviceResponse.data);
+
+        // Fetch active cases
+        const activeCaseResponse = await getActiveCases();
+        setActiveCases(activeCaseResponse.data); // Store active cases
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -65,7 +71,6 @@ const ProductManagerDashboard = () => {
       console.error("Error assigning clients:", error);
     }
   };
-  
 
   return (
     <div className="product-dashboard-container">
@@ -74,17 +79,13 @@ const ProductManagerDashboard = () => {
       {/* Sidebar */}
       <div className="product-sidebar">
         <div
-          className={`sidebar-item ${
-            selectedSection === "linkCases" ? "active" : ""
-          }`}
+          className={`sidebar-item ${selectedSection === "linkCases" ? "active" : ""}`}
           onClick={() => setSelectedSection("linkCases")}
         >
           Link Cases
         </div>
         <div
-          className={`sidebar-item ${
-            selectedSection === "activeCases" ? "active" : ""
-          }`}
+          className={`sidebar-item ${selectedSection === "activeCases" ? "active" : ""}`}
           onClick={() => setSelectedSection("activeCases")}
         >
           Active Cases
@@ -95,24 +96,24 @@ const ProductManagerDashboard = () => {
       <div className="product-main-content">
         {selectedSection === "linkCases" && (
           <div className="dropdown-panel">
-           {/* Select Service */}
-<div className="dropdown-panel-item">
-  <label>Select Service:</label>
-  <Autocomplete
-    options={services} // Provide the array of services
-    getOptionLabel={(option) => option.name} // Show service name in the dropdown
-    value={selectedService} // The currently selected service
-    onChange={(event, newValue) => setSelectedService(newValue)} // Update selected service
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        label="Select Service"
-        placeholder="Service"
-      />
-    )}
-    style={{ width: 300 }}
-  />
-</div>
+            {/* Select Service */}
+            <div className="dropdown-panel-item">
+              <label>Select Service:</label>
+              <Autocomplete
+                options={services} // Provide the array of services
+                getOptionLabel={(option) => option.name} // Show service name in the dropdown
+                value={selectedService} // The currently selected service
+                onChange={(event, newValue) => setSelectedService(newValue)} // Update selected service
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Service"
+                    placeholder="Service"
+                  />
+                )}
+                style={{ width: 300 }}
+              />
+            </div>
 
             {/* Select Case Manager */}
             <div className="dropdown-panel-item">
@@ -121,9 +122,7 @@ const ProductManagerDashboard = () => {
                 options={caseManagers}
                 getOptionLabel={(option) => option.name}
                 value={selectedCaseManager}
-                onChange={(event, newValue) =>
-                  setSelectedCaseManager(newValue)
-                }
+                onChange={(event, newValue) => setSelectedCaseManager(newValue)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -144,9 +143,7 @@ const ProductManagerDashboard = () => {
                 disableCloseOnSelect
                 value={selectedClients.map((s) => String(s))}
                 onChange={handleClientSelection}
-                getOptionLabel={(option) =>
-                  clients.find((c) => c.id == option)?.email
-                }
+                getOptionLabel={(option) => clients.find((c) => c.id == option)?.email}
                 renderOption={(props, option, { selected }) => (
                   <li {...props}>
                     <Checkbox
@@ -176,22 +173,33 @@ const ProductManagerDashboard = () => {
           </div>
         )}
 
-        {selectedSection === "activeCases" && (
-          <div className="cards-container">
-            {clients.map((client) => (
-              <div className="product-card" key={client.id}>
-                <h3>Product: {client.name}</h3>
-                <p>{client.email}</p>
-                <span>
-                  Assigned To:{" "}
-                  {caseManagers.find(
-                    (c) => c.id === client.case_manager_id
-                  )?.name || "Unassigned"}
-                </span>
-              </div>
-            ))}
+{selectedSection === "activeCases" && (
+  <div className="cards-container">
+    {activeCases.map((activeCase) => {
+      // Extract client and case manager details
+      const client = activeCase.client;  // Client data for the case
+      const caseManager = activeCase.case_manager;  // Case manager data for the case
+
+      return (
+        <div className="product-card" key={client.id}>
+          {/* First row: Display client name as case name */}
+          <div className="case-name-row">
+            <h3>Case: {client.name}</h3>  {/* Use client name as case name */}
           </div>
-        )}
+
+          {/* Second row: Display assigned case manager or "Unassigned" */}
+          <div className="assigned-to-row">
+            <span>
+              Assigned To: {caseManager ? caseManager.name : "Unassigned"}
+            </span>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)}
+
+
       </div>
     </div>
   );

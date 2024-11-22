@@ -15,6 +15,18 @@ export function createMeeting(meetingData) {
   return api.post("/meetings/", meetingData);
 }
 
+export function initiateClient(case_manager_id, client_id, service_id) {
+  const payload = {
+    case_manager_id: case_manager_id,
+    client_id: client_id,
+    service_id: service_id,
+  };
+
+  return api.post(`/users/case_manager/initial/management/${case_manager_id}?client_id=${client_id}&service_id=${service_id}`,
+    payload
+  );
+}
+
 export function getAllMeetings(caseManagerId, clientId) {
   return api.get("/meetings/");
 }

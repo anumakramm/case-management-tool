@@ -8,13 +8,6 @@ export function userSignIn(data) {
   return api.post("/users/signin", data);
 }
 
-// export function linkCaseManagerAndClient(pm_id, cm_id, clients) {
-//   return api.post(
-//     `/product_manager/${pm_id}/assign_users_to_case_manager/${cm_id}`,
-//     clients
-//   );
-// }
-
 export function linkCaseManagerAndClient(case_manager_id, client_id, service_id) {
   const payload = {
     case_manager_id: case_manager_id,
@@ -31,4 +24,8 @@ export function linkCaseManagerAndClient(case_manager_id, client_id, service_id)
 
 export function getAllServices() {
   return api.get("/services/all");
+}
+
+export function getActiveCases() {
+  return api.get("/users/product_manager/cases/active");
 }
