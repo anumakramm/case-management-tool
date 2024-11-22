@@ -193,6 +193,12 @@ const ProductManagerDashboard = () => {
                       Assigned To: {caseManager ? caseManager.name : "Unassigned"}
                     </span>
                   </div>
+
+                  <div className="assigned-to-row">
+                    <span>
+                      Service Id: {activeCase.service_id}
+                    </span>
+                  </div>
                 </div>
               );
             })}

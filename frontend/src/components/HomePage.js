@@ -4,23 +4,28 @@ import "./HomePage.css";
 import { userSignIn } from "../api/productManager";
 import { useDispatch } from "react-redux";
 import { setUserId } from "../redux/managerSlice";
+import { Alert, Snackbar } from "@mui/material";
 
 const HomePage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [snackbarMessage, setSnackbarMessage] = useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     userSignIn({ username, password })
       .then((res) => {
-        dispatch(setUserId(res.data.user.id));
-        localStorage.setItem("role", res.data.user.role);
+        if (res.data.user.role !== "admin") {
+          dispatch(setUserId(res.data.user.id));
+          localStorage.setItem("role", res.data.user.role);
+        }
         if (res.data.user.role === "admin") {
-          localStorage.setItem("admin_token", res.data.access_token);
-          console.log("localstorage: ", localStorage.getItem("admin_token"))
-          navigate("/admin");
+          setSnackbarMessage("Something went wrong while signing in");
+          // localStorage.setItem("admin_token", res.data.access_token);
+          // console.log("localstorage: ", localStorage.getItem("admin_token"))
+          // navigate("/admin");
         } else if (res.data.user.role === "product_manager") {
           navigate("/product-manager");
         } else if (res.data.user.role === "case_manager") {
@@ -30,6 +35,7 @@ const HomePage = () => {
       .catch((err) => {
         localStorage.removeItem("admin_token");
         localStorage.removeItem("role");
+        setSnackbarMessage("Something went wrong while signing in");
       });
   };
 
@@ -94,14 +100,20 @@ const HomePage = () => {
         <p className="register-prompt">
           New on our platform? <Link to="/register">Create an account</Link>
         </p>
-        {/* <div className="divider">
-          <span>or</span>
-        </div> */}
-        {/* <div className="social-login">
-          <button className="social-button">🌐</button>
-          <button className="social-button">🐦</button>
-          <button className="social-button">🔴</button>
-        </div> */}
+        <Snackbar
+          open={!!snackbarMessage}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarMessage(undefined)}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert
+            onClose={() => setSnackbarMessage(undefined)}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   );

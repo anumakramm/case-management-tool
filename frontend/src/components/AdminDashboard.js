@@ -16,7 +16,9 @@ const Modal = ({
   formTitle,
   formData,
   setFormData,
-  children,
+  formType,
+  handleFileUpload,
+  setFile,
 }) => {
   if (!isOpen) return null;
 
@@ -29,7 +31,31 @@ const Modal = ({
     <div className="modal-overlay">
       <div className="modal">
         <h2 className="modal-title">{formTitle}</h2>
-        {children || (
+        {formType === "services" ? (
+          <form onSubmit={handleFileUpload}>
+            <div className="form-group">
+              <label>Upload .xlsx File</label>
+              <input
+                type="file"
+                accept=".xlsx"
+                onChange={(e) => setFile(e.target.files[0])}
+                required
+              />
+            </div>
+            <div className="modal-buttons">
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        ) : (
           <form onSubmit={onSubmit} className="modal-form">
             {Object.keys(formData).map((key) => (
               <div key={key} className="form-group">
@@ -134,12 +160,11 @@ const AdminDashboard = () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    try {
-      await addServices(formData); // Call the addServices API function
-      setSnackbarMessage("Services file uploaded successfully!");
-    } catch (error) {
-      setSnackbarMessage("File upload failed. Please try again.");
-    }
+    await addServices(formData)
+      .then((res) => {
+        setSnackbarMessage("Services file uploaded successfully!");
+      })
+      .catch((err) => setSnackbarMessage("Services file uploaded failed!")); // Call the addServices API function
 
     setFile(null);
     setIsModalOpen(false);
@@ -234,33 +259,12 @@ const AdminDashboard = () => {
         onClose={() => setIsModalOpen(false)}
         formTitle={formTitle}
         onSubmit={formType === "services" ? handleFileUpload : handleSubmit}
-      >
-        {formType === "services" && (
-          <form onSubmit={handleFileUpload}>
-            <div className="form-group">
-              <label>Upload .xlsx File</label>
-              <input
-                type="file"
-                accept=".xlsx"
-                onChange={(e) => setFile(e.target.files[0])}
-                required
-              />
-            </div>
-            <div className="modal-buttons">
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        )}
-      </Modal>
+        formType={formType}
+        handleFileUpload={handleFileUpload}
+        setFile={setFile}
+        formData={formData}
+        setFormData={setFormData}
+      />
 
       <Snackbar
         open={snackbarOpen}
@@ -270,7 +274,7 @@ const AdminDashboard = () => {
       >
         <Alert
           onClose={handleSnackbarClose}
-          severity="success"
+          severity="info"
           sx={{ width: "100%" }}
         >
           {snackbarMessage}

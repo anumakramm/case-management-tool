@@ -22,7 +22,8 @@ export function initiateClient(case_manager_id, client_id, service_id) {
     service_id: service_id,
   };
 
-  return api.post(`/users/case_manager/initial/management/${case_manager_id}?client_id=${client_id}&service_id=${service_id}`,
+  return api.post(
+    `/users/case_manager/initial/management/${case_manager_id}?client_id=${client_id}&service_id=${service_id}`,
     payload
   );
 }
@@ -35,8 +36,8 @@ export function getCaseMangersUsers(case_manager_id) {
   return api.get(`/users/case_manager/${case_manager_id}/users`);
 }
 
-export function getCaseMangersUserMeeting(case_manager_id, user_email) {
+export function getCaseMangersUserMeeting(client_id, service_id) {
   return api.get(
-    `/meetings/case_manager/${case_manager_id}/client/${user_email}`
+    `/users/case_manager/client/${client_id}/service/${service_id}/meetings/all`
   );
 }
