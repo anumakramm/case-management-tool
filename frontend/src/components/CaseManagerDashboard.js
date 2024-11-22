@@ -3,43 +3,66 @@ import "./CaseManagerDashboard.css"; // Import CSS styles
 import Header from "./Header"; // Import the Header component
 import ScheduleMeeting from "./meeting";
 import MeetingListing from "./meeting/listing";
-import { getCaseMangersUsers } from "../api/caseManager";
+import { getCaseMangersUsers } from "../api/caseManager"; // Import API call
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 
 const CaseManagerDashboard = () => {
-  const [cases, setCases] = useState([]);
-  const [expandedCard, setExpandedCard] = useState(null);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const caseManagerId = useSelector((state) => state.manager.caseManagerId);
+  const [clients, setClients] = useState([]); // State to store the clients assigned to the case manager
+  const [expandedCard, setExpandedCard] = useState(null);  // Track expanded card
+  const [selectedClient, setSelectedClient] = useState(null);  // Track selected client for scheduling
+  const [isModalOpen, setIsModalOpen] = useState(false);  // Track modal state
+  const [loading, setLoading] = useState(true);  // Track loading state
+  const caseManagerId = useSelector((state) => state.manager.caseManagerId);  // Get case manager ID from Redux store
 
-  const fetchCases = async () => {
+  // Function to fetch all clients assigned to the case manager
+  const fetchClients = async () => {
+    console.log("Fetching clients for Case Manager ID Before If:", caseManagerId); // Check caseManagerId
     if (caseManagerId) {
-      getCaseMangersUsers(caseManagerId).then((res) => {
-        setCases(res.data.users);
-      });
+      try {
+        console.log("Fetching clients for case manager ID:", caseManagerId);  // Log to check ID
+        const res = await getCaseMangersUsers(caseManagerId);  // Fetch data
+        console.log("API response:", res.data);  // Log the entire API response to see the structure
+
+        // Check if 'users' exists and is an array before updating state
+        if (res.data && Array.isArray(res.data.users)) {
+          setClients(res.data.users);  // Assuming 'users' contains the client data
+        } else {
+          console.error("No users found in the API response");
+          setClients([]);  // Set an empty array if no users are found
+        }
+      } catch (error) {
+        console.error("Error fetching assigned clients:", error);
+      } finally {
+        setLoading(false);  // Stop loading after the API call
+      }
     }
   };
 
-  const handleExpandCard = (caseItem) => {
-    if (expandedCard === caseItem.id) {
-      setExpandedCard(null); // Collapse the expanded card
+  // Handle expanding and collapsing of client cards
+  const handleExpandCard = (client) => {
+    if (expandedCard === client.id) {
+      setExpandedCard(null); // Collapse the card
     } else {
-      setExpandedCard(caseItem.id); // Expand the selected card
+      setExpandedCard(client.id); // Expand the selected card
     }
   };
 
+  // Handle the click event for a client to schedule a meeting
   const handleClientClick = (client) => {
     setSelectedClient(client);
-    setExpandedCard(null);
-    setIsModalOpen(true);
+    setExpandedCard(null);  // Close any expanded card
+    setIsModalOpen(true);  // Open the modal for scheduling a meeting
   };
 
+  // Fetch assigned clients when caseManagerId changes
   useEffect(() => {
-    fetchCases();
-  }, [caseManagerId]);
+    fetchClients();
+  }, [caseManagerId]);  // Ensure useEffect runs when caseManagerId changes
+
+  // Log the clients state to verify it's being updated
+  console.log("Current clients:", clients);
 
   return (
     <div className="case-case-manager-dashboard">
@@ -47,71 +70,69 @@ const CaseManagerDashboard = () => {
       <Header title="Case Manager Dashboard" />
 
       <div className="case-dashboard-content">
-        <h1 className="case-dashboard-title">Case Details</h1>
-        <div className="case-cards-container">
-          {cases.map((caseItem) => (
-            <div
-              key={caseItem.id}
-              className={`case-case-card ${
-                expandedCard === caseItem.id ? "expanded" : ""
-              }`}
-            >
-              <div className="case-case-card-header">
-                <div className="case-card-title">
-                  <h2>{caseItem.name}</h2>
-                  <p>{caseItem.email}</p>
-                </div>
-                <div className="case-expand-icon">
-                  {expandedCard === caseItem.id ? (
-                    <KeyboardArrowUp
-                      className="case-icon-toggle"
-                      onClick={() => handleExpandCard(caseItem)}
-                    />
-                  ) : (
-                    <KeyboardArrowDown
-                      className="case-icon-toggle"
-                      onClick={() => handleExpandCard(caseItem)}
-                    />
-                  )}
-                </div>
-              </div>
-              {expandedCard === caseItem.id && (
-                <div className="case-card-details">
-                  <MeetingListing
-                    caseManagerId={caseManagerId}
-                    caseEmail={caseItem.email}
-                  />
-                </div>
-              )}
-              <div className="case-card-footer">
-                <Button
-                  variant="contained"
-                  size="small"
-                  className="case-add-meeting-btn"
-                  onClick={() => handleClientClick(caseItem)}
+        <h1 className="case-dashboard-title">Client Details</h1>
+        
+        {/* Loading message while fetching */}
+        {loading ? (
+          <p>Loading clients...</p>
+        ) : (
+          <div className="case-cards-container">
+            {/* Render the list of clients */}
+            {clients.length === 0 ? (
+              <p>No clients found</p>  // Show a message if there are no clients
+            ) : (
+              clients.map((client) => (
+                <div
+                  key={client.id}
+                  className={`case-case-card ${
+                    expandedCard === client.id ? "expanded" : ""
+                  }`}
                 >
-                  Initialize Client
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+                  <div className="case-case-card-header">
+                    <div className="case-card-title">
+                      <h2>{client.name}</h2>  {/* Display the client's name */}
+                      <p>{client.email}</p>  {/* Display the client's email */}
+                    </div>
+                    <div className="case-expand-icon">
+                      {expandedCard === client.id ? (
+                        <KeyboardArrowUp
+                          className="case-icon-toggle"
+                          onClick={() => handleExpandCard(client)}
+                        />
+                      ) : (
+                        <KeyboardArrowDown
+                          className="case-icon-toggle"
+                          onClick={() => handleExpandCard(client)}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {expandedCard === client.id && (
+                    <div className="case-card-details">
+                      <MeetingListing
+                        caseManagerId={caseManagerId}
+                        caseEmail={client.email}
+                      />
+                    </div>
+                  )}
+                  <div className="case-card-footer">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      className="case-add-meeting-btn"
+                      onClick={() => handleClientClick(client)}
+                    >
+                      Initialize Client
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
-      {/* {isModalOpen && (
-        <div className="case-modal-overlay">
-          <div className="case-modal-content">
-            <h3>Add New Appointment</h3>
-            <ScheduleMeeting client={selectedClient} />
-            <button
-              className="case-close-button"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )} */}
+      {/* Modal and meeting scheduling can be added back here */}
     </div>
   );
 };

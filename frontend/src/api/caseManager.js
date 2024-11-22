@@ -20,7 +20,7 @@ export function getAllMeetings(caseManagerId, clientId) {
 }
 
 export function getCaseMangersUsers(case_manager_id) {
-  return api.get(`/case_manager/${case_manager_id}/users`);
+  return api.get(`/users/case_manager/${case_manager_id}/users`);
 }
 
 export function getCaseMangersUserMeeting(case_manager_id, user_email) {
