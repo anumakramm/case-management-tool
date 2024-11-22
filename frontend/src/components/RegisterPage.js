@@ -1,27 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegisterPage.css";
+import { addPassword } from "../api/admin"; // Import the API function
 
 const RegistrationPage = () => {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(false);
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    if (!termsAccepted) {
-      alert("Please accept the terms and conditions!");
-      return;
+
+    try {
+      const response = await addPassword({ email, password });
+      if (response.status === 200) {
+        alert("Password updated successfully!");
+        navigate("/"); // Navigate to the login or home page
+      } else {
+        alert("Failed to update password. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error updating password:", error);
+      alert("An error occurred while updating the password.");
     }
-    // Placeholder for registration logic
-    console.log({
-      username,
-      email,
-      password,
-    });
-    navigate("/");
   };
 
   return (
@@ -37,20 +38,10 @@ const RegistrationPage = () => {
         <h2 className="form-title">Adventure starts here 🚀</h2>
         <p className="form-subtitle">Make your case management easy and fun!</p>
         <form onSubmit={handleRegister} className="registration-form">
-          {/* <div className="form-group">
-            <label htmlFor="username" className="form-label">Username</label>
-            <input
-              type="text"
-              id="username"
-              className="form-input"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div> */}
           <div className="form-group">
-            <label htmlFor="email" className="form-label">Email</label>
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -62,7 +53,9 @@ const RegistrationPage = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -73,29 +66,13 @@ const RegistrationPage = () => {
               required
             />
           </div>
-          <div className="form-group terms-group">
-            {/* <input
-              type="checkbox"
-              id="terms"
-              checked={termsAccepted}
-              onChange={() => setTermsAccepted(!termsAccepted)}
-            /> */}
-            {/* <label htmlFor="terms" className="terms-label">
-              I agree to <a href="/terms">privacy policy & terms</a>
-            </label> */}
-          </div>
-          <button type="submit" className="submit-button">Sign Up</button>
+          <button type="submit" className="submit-button">
+            Sign Up
+          </button>
         </form>
         <p className="form-footer">
           Already have an account? <a href="/">Sign in instead</a>
         </p>
-        {/* <div className="divider"><span>or</span></div>
-        <div className="social-login">
-          <button className="social-button">🌐</button>
-          <button className="social-button">🐦</button>
-          <button className="social-button">🔴</button>
-        </div>
-        <button className="buy-now-button">Buy Now</button> */}
       </div>
     </div>
   );

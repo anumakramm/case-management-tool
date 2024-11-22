@@ -16,3 +16,7 @@ export function addServices(file) {
         },
     });
 }
+
+export function addPassword(data) {
+    return api.post('/users/update', data)
+ }
