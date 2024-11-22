@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import "./AdminDashboard.css";
+import { useNavigate } from "react-router-dom";
 import { addProductManager } from "../api/productManager";
+import Header from "./Header"; // Import the Header component
+import "./AdminDashboard.css";
 
 const Modal = ({
   isOpen,
@@ -21,22 +23,22 @@ const Modal = ({
 
   return (
     <div className="modal-overlay">
-      <div
-        className="modal centered-modal"
-        style={{ top: "auto", left: "auto" }}
-      >
-        <h2>{formTitle}</h2>
-        <form onSubmit={onSubmit} className="form-container">
+      <div className="modal">
+        <h2 className="modal-title">{formTitle}</h2>
+        <form onSubmit={onSubmit} className="modal-form">
           {Object.keys(formData).map((key) => (
             <div key={key} className="form-group">
-              <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
+              <label className="form-label">
+                {key.charAt(0).toUpperCase() + key.slice(1)}
+              </label>
               <input
                 type="text"
                 name={key}
                 value={formData[key]}
                 onChange={handleInputChange}
-                required
+                className="form-input"
                 placeholder={`Enter ${key}`}
+                required
               />
             </div>
           ))}
@@ -58,13 +60,15 @@ const Modal = ({
   );
 };
 
+
 const AdminDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formTitle, setFormTitle] = useState("");
   const [formData, setFormData] = useState({ name: "", email: "", role: "" });
   const [formType, setFormType] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState(""); // New state for Snackbar message
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleOpenModal = (type) => {
     setFormType(type);
@@ -80,17 +84,24 @@ const AdminDashboard = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Set custom Snackbar message based on formType
     let message = "";
     if (formType === "product_manager") {
-      addProductManager({ name: formData.name, email: formData.email, role: formData.role });
+      addProductManager({
+        name: formData.name,
+        email: formData.email,
+        role: formData.role,
+      });
+      message = "Product Manager added successfully!";
+      navigate("/admin");
     } else if (formType === "case_manager") {
       message = "Case Manager added successfully!";
+      navigate("/admin");
     } else if (formType === "client") {
       message = "Client added successfully!";
+      navigate("/admin");
     }
-    setSnackbarMessage(message);
 
+    setSnackbarMessage(message);
     setIsModalOpen(false);
     setSnackbarOpen(true);
     setFormData({ name: "", email: "", role: "" });
@@ -101,32 +112,70 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div>
-      <div className="admin-dashboard">
-        <h1>Admin Dashboard</h1>
-        <div className="button-container">
-          <button
-            className="btn btn-success"
-            onClick={() => handleOpenModal("product_manager")}
-          >
-            Add Product Manager
-          </button>
-          <button
-            className="btn btn-info"
-            onClick={() => handleOpenModal("case_manager")}
-          >
-            Add Case Manager
-          </button>
-          <button
-            className="btn btn-warning"
-            onClick={() => handleOpenModal("client")}
-          >
-            Add Client
-          </button>
+    <div className="admin-dashboard-container">
+      {/* Include Header with Title */}
+      <Header title="Admin Dashboard" />
+
+      <h1></h1>
+      <div className="cards-container">
+        {/* Card 1: Product Manager */}
+        <div className="card">
+          <div className="card-header gradient-bg">
+            <h2 className="card-title">Product Manager</h2>
+            
+          </div>
+          <div className="card-body">
+            <p>
+              Add a new Product Manager to manage your products effectively.
+            </p>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleOpenModal("product_manager")}
+            >
+              Add Product Manager
+            </button>
+          </div>
+        </div>
+
+        {/* Card 2: Case Manager */}
+        <div className="card">
+          <div className="card-header gradient-bg-2">
+            <h2 className="card-title">Case Manager</h2>
+            
+          </div>
+          <div className="card-body">
+            <p>
+              Add a Case Manager to oversee all case-related operations.
+            </p>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleOpenModal("case_manager")}
+            >
+              Add Case Manager
+            </button>
+          </div>
+        </div>
+
+        {/* Card 3: Client */}
+        <div className="card">
+          <div className="card-header gradient-bg-3">
+            <h2 className="card-title">Client</h2>
+            
+          </div>
+          <div className="card-body">
+            <p>
+              Add a new Client to allow them to use the platform and access services.
+            </p>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleOpenModal("client")}
+            >
+              Add Client
+            </button>
+          </div>
         </div>
       </div>
       <Modal
-        style={{ top: "50%", left: "50%" }}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
@@ -145,7 +194,7 @@ const AdminDashboard = () => {
           severity="success"
           sx={{ width: "100%" }}
         >
-          {snackbarMessage} {/* Display custom message */}
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </div>

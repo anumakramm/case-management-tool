@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
-import "./CaseManagerDashboard.css"; // Import the CSS styles
+import "./CaseManagerDashboard.css"; // Import CSS styles
+import Header from "./Header"; // Import the Header component
 import ScheduleMeeting from "./meeting";
+import MeetingListing from "./meeting/listing";
 import { getCaseMangersUsers } from "../api/caseManager";
 import { useSelector } from "react-redux";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import MeetingListing from "./meeting/listing";
 import { Button } from "@mui/material";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 
 const CaseManagerDashboard = () => {
   const [cases, setCases] = useState([]);
-  const [expandedRow, setExpandedRow] = useState(null);
+  const [expandedCard, setExpandedCard] = useState(null);
   const [selectedClient, setSelectedClient] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const caseManagerId = useSelector((state) => state.manager.caseManagerId);
-  // Simulated fetch function to get case data
+
   const fetchCases = async () => {
     if (caseManagerId) {
       getCaseMangersUsers(caseManagerId).then((res) => {
@@ -22,18 +23,18 @@ const CaseManagerDashboard = () => {
     }
   };
 
-  const handleClientClick = (client) => {
-    setSelectedClient(client);
-    setExpandedRow(null);
-    setIsModalOpen(true);
+  const handleExpandCard = (caseItem) => {
+    if (expandedCard === caseItem.id) {
+      setExpandedCard(null); // Collapse the expanded card
+    } else {
+      setExpandedCard(caseItem.id); // Expand the selected card
+    }
   };
 
-  const handleRowClick = (caseItem) => {
-    if (expandedRow === caseItem.id) {
-      setExpandedRow(null); // Collapse if already expanded
-    } else {
-      setExpandedRow(caseItem.id); // Expand the clicked row
-    }
+  const handleClientClick = (client) => {
+    setSelectedClient(client);
+    setExpandedCard(null);
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
@@ -41,73 +42,76 @@ const CaseManagerDashboard = () => {
   }, [caseManagerId]);
 
   return (
-    <div>
-      <h1>Case Manager Dashboard</h1>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Case ID</th>
-            <th>Client Name</th>
-            <th>Email</th>
-            <th>Add New Meeting</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="case-case-manager-dashboard">
+      {/* Include Header */}
+      <Header title="Case Manager Dashboard" />
+
+      <div className="case-dashboard-content">
+        <h1 className="case-dashboard-title">Case Details</h1>
+        <div className="case-cards-container">
           {cases.map((caseItem) => (
-            <>
-              <tr key={caseItem.id}>
-                <td>
-                  {expandedRow && expandedRow === caseItem.id ? (
-                    <KeyboardArrowUp onClick={() => handleRowClick(caseItem)} />
+            <div
+              key={caseItem.id}
+              className={`case-case-card ${
+                expandedCard === caseItem.id ? "expanded" : ""
+              }`}
+            >
+              <div className="case-case-card-header">
+                <div className="case-card-title">
+                  <h2>{caseItem.name}</h2>
+                  <p>{caseItem.email}</p>
+                </div>
+                <div className="case-expand-icon">
+                  {expandedCard === caseItem.id ? (
+                    <KeyboardArrowUp
+                      className="case-icon-toggle"
+                      onClick={() => handleExpandCard(caseItem)}
+                    />
                   ) : (
                     <KeyboardArrowDown
-                      onClick={() => handleRowClick(caseItem)}
+                      className="case-icon-toggle"
+                      onClick={() => handleExpandCard(caseItem)}
                     />
                   )}
-                </td>
-                <td>{caseItem.id}</td>
-                <td>{caseItem.name}</td>
-                <td>{caseItem.email}</td>
-                <td>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleClientClick(caseItem)}
-                  >
-                    Add Meeting
-                  </Button>
-                </td>
-              </tr>
-              {expandedRow === caseItem.id && (
-                <tr className="expanded-row">
-                  <td colSpan="5">
-                    <MeetingListing
-                      caseManagerId={caseManagerId}
-                      caseEmail={caseItem.email}
-                    />
-                  </td>
-                </tr>
+                </div>
+              </div>
+              {expandedCard === caseItem.id && (
+                <div className="case-card-details">
+                  <MeetingListing
+                    caseManagerId={caseManagerId}
+                    caseEmail={caseItem.email}
+                  />
+                </div>
               )}
-            </>
+              <div className="case-card-footer">
+                <Button
+                  variant="contained"
+                  size="small"
+                  className="case-add-meeting-btn"
+                  onClick={() => handleClientClick(caseItem)}
+                >
+                  Initialize Client
+                </Button>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
 
-      {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+      {/* {isModalOpen && (
+        <div className="case-modal-overlay">
+          <div className="case-modal-content">
             <h3>Add New Appointment</h3>
             <ScheduleMeeting client={selectedClient} />
             <button
-              className="close-button"
+              className="case-close-button"
               onClick={() => setIsModalOpen(false)}
             >
               Close
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

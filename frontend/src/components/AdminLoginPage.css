@@ -1,0 +1,81 @@
+/* General container styling */
+.admin-login-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    padding: 0 50px;
+    background-color: #f9fafc;
+  }
+  
+  /* Illustration Section */
+  .illustration-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .illustration-image {
+    max-width: 60%;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  /* Form Section */
+  .form-container {
+    flex: 1;
+    max-width: 450px;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form-subtitle {
+    font-size: 1rem;
+    color: #6c757d;
+    margin: 10px 0 20px;
+  }
+  
+  .admin-login-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #495057;
+    margin-bottom: 5px;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #7367f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .submit-button:hover {
+    background-color: #5a54d7;
+  }
+  
