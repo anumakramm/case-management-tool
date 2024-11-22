@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -6,15 +6,18 @@ import "./ProductManagerDashboard.css";
 import Header from "../components/Header";
 import { getAllCaseMangers } from "../api/caseManager";
 import { getAllClients } from "../api/client";
+import { getAllServices } from "../api/productManager"; // Import the correct service fetching function
 import { linkCaseManagerAndClient } from "../api/productManager";
 
 const ProductManagerDashboard = () => {
   const [caseManagers, setCaseManagers] = useState([]);
   const [clients, setClients] = useState([]);
-  const [selectedSection, setSelectedSection] = useState("linkCases"); // Sidebar toggle
+  const [services, setServices] = useState([]); // State for services
+  const [selectedService, setSelectedService] = useState(null); // State for selected service
+  const [selectedSection, setSelectedSection] = useState("linkCases");
   const [selectedCaseManager, setSelectedCaseManager] = useState(null);
   const [selectedClients, setSelectedClients] = useState([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,6 +25,8 @@ const ProductManagerDashboard = () => {
         setCaseManagers(caseManagerResponse.data);
         const clientResponse = await getAllClients();
         setClients(clientResponse.data);
+        const serviceResponse = await getAllServices(); // Fetch services
+        setServices(serviceResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -36,16 +41,31 @@ const ProductManagerDashboard = () => {
 
   const handleAssignClients = async () => {
     try {
-      await linkCaseManagerAndClient(
-        selectedCaseManager?.id,
-        selectedClients
-      );
+      // Ensure all fields are selected
+      if (!selectedCaseManager || selectedClients.length === 0 || !selectedService) {
+        console.error("All fields (Case Manager, Clients, and Service) must be selected.");
+        return;
+      }
+  
+      // Loop through selected clients and make individual API calls
+      for (const clientId of selectedClients) {
+        // Convert clientId and other IDs to integers to avoid type mismatch
+        await linkCaseManagerAndClient(
+          parseInt(selectedCaseManager.id, 10),  // Ensure case_manager_id is an integer
+          parseInt(clientId, 10),                // Ensure client_id is an integer
+          parseInt(selectedService.id, 10)       // Ensure service_id is an integer
+        );
+      }
+  
+      // Reset state after successful assignment
       setSelectedCaseManager(null);
       setSelectedClients([]);
+      setSelectedService(null);
     } catch (error) {
       console.error("Error assigning clients:", error);
     }
   };
+  
 
   return (
     <div className="product-dashboard-container">
@@ -75,6 +95,25 @@ const ProductManagerDashboard = () => {
       <div className="product-main-content">
         {selectedSection === "linkCases" && (
           <div className="dropdown-panel">
+           {/* Select Service */}
+<div className="dropdown-panel-item">
+  <label>Select Service:</label>
+  <Autocomplete
+    options={services} // Provide the array of services
+    getOptionLabel={(option) => option.name} // Show service name in the dropdown
+    value={selectedService} // The currently selected service
+    onChange={(event, newValue) => setSelectedService(newValue)} // Update selected service
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="Select Service"
+        placeholder="Service"
+      />
+    )}
+    style={{ width: 300 }}
+  />
+</div>
+
             {/* Select Case Manager */}
             <div className="dropdown-panel-item">
               <label>Select Case Manager:</label>
