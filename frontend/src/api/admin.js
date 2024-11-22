@@ -9,3 +9,7 @@ export function signinAdmin(data) {
 export function addServices(file) {
   return api.post("/users/services/upload", file);
 }
+
+export function addPassword(data) {
+    return api.post('/users/update', data)
+ }

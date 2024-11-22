@@ -6,6 +6,10 @@ const api = axios.create({
   withCredentials: true, 
 });
 
+export function addPassword(data) {
+  return api.post("/users/update", data);
+}
+
 // Request interceptor to add the Authorization token to headers
 api.interceptors.request.use(
   (config) => {
