@@ -22,21 +22,12 @@ const CaseManagerDashboard = () => {
 
   // Function to fetch all clients assigned to the case manager
   const fetchClients = async () => {
-    console.log(
-      "Fetching clients for Case Manager ID Before If:",
-      caseManagerId
-    ); // Check caseManagerId
     if (caseManagerId) {
       try {
-        console.log("Fetching clients for case manager ID:", caseManagerId); // Log to check ID
         const res = await getCaseMangersUsers(caseManagerId); // Fetch data
-        console.log("API response:", res.data); // Log the entire API response to see the structure
-
-        // Check if 'users' exists and is an array before updating state
         if (res.data && Array.isArray(res.data.users)) {
           setClients(res.data.users); // Assuming 'users' contains the client data
         } else {
-          console.error("No users found in the API response");
           setClients([]); // Set an empty array if no users are found
         }
       } catch (error) {
@@ -166,7 +157,7 @@ const CaseManagerDashboard = () => {
                       className="case-add-meeting-btn"
                       onClick={() => handleClientInit(client)} // Call handleClientInit instead of handleClientClick
                     >
-                      Initialize Client
+                      Set Up Meetings
                     </Button>
                   </div>
                 </div>

@@ -7,3 +7,8 @@ export function addClient(data) {
 export function getAllClients() {
   return api.get("/users/clients/all");
 }
+
+export function getAllActiveClients() {
+  return api.get("/users/clients/active");
+}
+

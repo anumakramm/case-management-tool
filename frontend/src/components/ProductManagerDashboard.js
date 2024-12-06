@@ -4,11 +4,16 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import "./ProductManagerDashboard.css";
 import Header from "../components/Header";
-import { getAllCaseMangers } from "../api/caseManager";
-import { getAllClients } from "../api/client";
-import { getAllServices } from "../api/productManager"; // Import the correct service fetching function
+import { getAllActiveCaseManagers } from "../api/caseManager";
+import { getAllActiveClients } from "../api/client";
+import {
+  cmClientRelationStatusUpdate,
+  getAllServices,
+  getClosedCases,
+} from "../api/productManager"; // Import the correct service fetching function
 import { linkCaseManagerAndClient } from "../api/productManager";
 import { getActiveCases } from "../api/productManager"; // Import the active cases fetching function
+import { Button } from "@mui/material";
 
 const ProductManagerDashboard = () => {
   const [caseManagers, setCaseManagers] = useState([]);
@@ -18,28 +23,33 @@ const ProductManagerDashboard = () => {
   const [selectedSection, setSelectedSection] = useState("linkCases");
   const [selectedCaseManager, setSelectedCaseManager] = useState(null);
   const [selectedClients, setSelectedClients] = useState([]);
-  const [activeCases, setActiveCases] = useState([]); // State for active cases
+  const [cases, setCases] = useState([]); // State for active cases
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const caseManagerResponse = await getAllCaseMangers();
+    fetchData();
+  }, [selectedSection]);
+
+  const fetchData = async () => {
+    try {
+      if (selectedSection === "linkCases") {
+        const caseManagerResponse = await getAllActiveCaseManagers();
         setCaseManagers(caseManagerResponse.data);
-        const clientResponse = await getAllClients();
+        const clientResponse = await getAllActiveClients();
         setClients(clientResponse.data);
         const serviceResponse = await getAllServices(); // Fetch services
         setServices(serviceResponse.data);
-
+      } else if (selectedSection === "activeCases") {
         // Fetch active cases
         const activeCaseResponse = await getActiveCases();
-        setActiveCases(activeCaseResponse.data); // Store active cases
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        setCases(activeCaseResponse.data); // Store active cases
+      } else if (selectedSection === "closedCases") {
+        const activeCaseResponse = await getClosedCases();
+        setCases(activeCaseResponse.data);
       }
-    };
-
-    fetchData();
-  }, []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleClientSelection = (event, newValue) => {
     setSelectedClients(newValue.map((n) => Number(n)));
@@ -48,21 +58,27 @@ const ProductManagerDashboard = () => {
   const handleAssignClients = async () => {
     try {
       // Ensure all fields are selected
-      if (!selectedCaseManager || selectedClients.length === 0 || !selectedService) {
-        console.error("All fields (Case Manager, Clients, and Service) must be selected.");
+      if (
+        !selectedCaseManager ||
+        selectedClients.length === 0 ||
+        !selectedService
+      ) {
+        console.error(
+          "All fields (Case Manager, Clients, and Service) must be selected."
+        );
         return;
       }
-  
+
       // Loop through selected clients and make individual API calls
       for (const clientId of selectedClients) {
         // Convert clientId and other IDs to integers to avoid type mismatch
         await linkCaseManagerAndClient(
-          parseInt(selectedCaseManager.id, 10),  // Ensure case_manager_id is an integer
-          parseInt(clientId, 10),                // Ensure client_id is an integer
-          parseInt(selectedService.id, 10)       // Ensure service_id is an integer
+          parseInt(selectedCaseManager.id, 10), // Ensure case_manager_id is an integer
+          parseInt(clientId, 10), // Ensure client_id is an integer
+          parseInt(selectedService.id, 10) // Ensure service_id is an integer
         );
       }
-  
+
       // Reset state after successful assignment
       setSelectedCaseManager(null);
       setSelectedClients([]);
@@ -79,16 +95,28 @@ const ProductManagerDashboard = () => {
       {/* Sidebar */}
       <div className="product-sidebar">
         <div
-          className={`sidebar-item ${selectedSection === "linkCases" ? "active" : ""}`}
+          className={`sidebar-item ${
+            selectedSection === "linkCases" ? "active" : ""
+          }`}
           onClick={() => setSelectedSection("linkCases")}
         >
           Link Cases
         </div>
         <div
-          className={`sidebar-item ${selectedSection === "activeCases" ? "active" : ""}`}
+          className={`sidebar-item ${
+            selectedSection === "activeCases" ? "active" : ""
+          }`}
           onClick={() => setSelectedSection("activeCases")}
         >
           Active Cases
+        </div>
+        <div
+          className={`sidebar-item ${
+            selectedSection === "closedCases" ? "active" : ""
+          }`}
+          onClick={() => setSelectedSection("closedCases")}
+        >
+          Closed Cases
         </div>
       </div>
 
@@ -143,7 +171,9 @@ const ProductManagerDashboard = () => {
                 disableCloseOnSelect
                 value={selectedClients.map((s) => String(s))}
                 onChange={handleClientSelection}
-                getOptionLabel={(option) => clients.find((c) => c.id == option)?.email}
+                getOptionLabel={(option) =>
+                  clients.find((c) => c.id == option)?.email
+                }
                 renderOption={(props, option, { selected }) => (
                   <li {...props}>
                     <Checkbox
@@ -173,32 +203,54 @@ const ProductManagerDashboard = () => {
           </div>
         )}
 
-        {selectedSection === "activeCases" && (
+        {(selectedSection === "activeCases" ||
+          selectedSection === "closedCases") && (
           <div className="cards-container">
-            {activeCases.map((activeCase) => {
+            {cases.map((activeCase) => {
               // Extract client and case manager details
-              const client = activeCase.client;  // Client data for the case
-              const caseManager = activeCase.case_manager;  // Case manager data for the case
+              const client = activeCase.client; // Client data for the case
+              const caseManager = activeCase.case_manager; // Case manager data for the case
 
               return (
                 <div className="product-card" key={client.id}>
                   {/* First row: Display client name as case name */}
                   <div className="case-name-row">
-                    <h3>Case: {client.name}</h3>  {/* Use client name as case name */}
+                    <h3>Case: {client.name}</h3>{" "}
+                    {/* Use client name as case name */}
                   </div>
 
                   {/* Second row: Display assigned case manager or "Unassigned" */}
                   <div className="assigned-to-row">
                     <span>
-                      Assigned To: {caseManager ? caseManager.name : "Unassigned"}
+                      Assigned To:{" "}
+                      {caseManager ? caseManager.name : "Unassigned"}
                     </span>
                   </div>
 
                   <div className="assigned-to-row">
-                    <span>
-                      Service Id: {activeCase.service_id}
-                    </span>
+                    <span>Service Id: {activeCase.service_id}</span>
                   </div>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color={
+                      selectedSection === "activeCases" ? "error" : "success"
+                    }
+                    className="case-close-btn"
+                    onClick={() => {
+                      cmClientRelationStatusUpdate(
+                        caseManager.id,
+                        client.id,
+                        activeCase.service_id,
+                        selectedSection === "activeCases" ? "closed" : "active"
+                      );
+                      fetchData();
+                    }} // Call handleClientInit instead of handleClientClick
+                  >
+                    {selectedSection === "activeCases"
+                      ? "Close Case"
+                      : "Retain Case"}
+                  </Button>
                 </div>
               );
             })}

@@ -41,3 +41,12 @@ export function getCaseMangersUserMeeting(client_id, service_id) {
     `/users/case_manager/client/${client_id}/service/${service_id}/meetings/all`
   );
 }
+
+export function getAllCaseManagers() {
+  return api.get("/users/case_manager/all");
+}
+
+export function getAllActiveCaseManagers() {
+  return api.get("/users/case_manager/active");
+}
+

@@ -11,5 +11,10 @@ export function addServices(file) {
 }
 
 export function addPassword(data) {
-    return api.post('/users/update', data)
- }
+  return api.post("/users/update", data);
+}
+
+export const deleteOrRetainUser = (id, status) => {
+  if (status === "ACTIVE") return api.delete(`/users/${id}`);
+  else if (status === "DELETED") return api.post(`/users/retain/${id}`);
+};

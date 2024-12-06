@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useNavigate } from "react-router-dom";
-import { addProductManager } from "../api/productManager";
-import { addCaseManagers } from "../api/caseManager";
-import { addClient } from "../api/client";
-import { addServices } from "../api/admin"; // Importing the services API
+import { Link, useNavigate } from "react-router-dom";
+import {
+  addProductManager,
+  getAllProductManagers,
+} from "../api/productManager";
+import { addCaseManagers, getAllCaseManagers } from "../api/caseManager";
+import { addClient, getAllClients } from "../api/client";
+import { addServices, deleteOrRetainUser } from "../api/admin"; // Importing the services API
 import Header from "./Header"; // Import the Header component
 import "./AdminDashboard.css";
+import ListOfUSersModal from "./listOfUsers";
 
 const Modal = ({
   isOpen,
@@ -100,6 +104,9 @@ const AdminDashboard = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [file, setFile] = useState(null); // State for the file upload
+  const [openListModal, setOpenListModal] = useState();
+  // const [listOfUsers, setListOfUsers] = useState([]);
+
   const navigate = useNavigate();
 
   const handleOpenModal = (type) => {
@@ -175,6 +182,20 @@ const AdminDashboard = () => {
     setSnackbarOpen(false);
   };
 
+  const handleListModalOpen = (isOpen, modalFor, dataFunc) => {
+    dataFunc.then((res) => {
+      setTimeout(() => handleOpenListModal(isOpen, modalFor, res.data), 1000);
+    });
+  };
+
+  const handleOpenListModal = (isOpen, modalFor, listOfUsers) => {
+    setOpenListModal({
+      isOpen: isOpen,
+      modalFor: modalFor,
+      data: listOfUsers,
+    });
+  };
+
   return (
     <div className="admin-dashboard-container">
       <Header title="Admin Dashboard" />
@@ -189,6 +210,18 @@ const AdminDashboard = () => {
             <p>
               Add a new Product Manager to manage your products effectively.
             </p>
+            <Link
+              to="#"
+              onClick={() =>
+                handleListModalOpen(
+                  true,
+                  "product_manager",
+                  getAllProductManagers()
+                )
+              }
+            >
+              List of Product Managers
+            </Link>
             <button
               className="btn btn-primary"
               onClick={() => handleOpenModal("product_manager")}
@@ -205,6 +238,14 @@ const AdminDashboard = () => {
           </div>
           <div className="card-body">
             <p>Add a Case Manager to oversee all case-related operations.</p>
+            <Link
+              to="#"
+              onClick={() =>
+                handleListModalOpen(true, "case_manager", getAllCaseManagers())
+              }
+            >
+              List of Case Managers
+            </Link>
             <button
               className="btn btn-primary"
               onClick={() => handleOpenModal("case_manager")}
@@ -224,6 +265,14 @@ const AdminDashboard = () => {
               Add a new Client to allow them to use the platform and access
               services.
             </p>
+            <Link
+              to="#"
+              onClick={() =>
+                handleListModalOpen(true, "clients", getAllClients())
+              }
+            >
+              List of Clients
+            </Link>
             <button
               className="btn btn-primary"
               onClick={() => handleOpenModal("client")}
@@ -265,6 +314,21 @@ const AdminDashboard = () => {
         formData={formData}
         setFormData={setFormData}
       />
+      {openListModal && (
+        <ListOfUSersModal
+          isOpen={openListModal.isOpen}
+          data={openListModal.data}
+          modalFor={openListModal.modalFor}
+          handleClose={() =>
+            setOpenListModal({
+              isOpen: false,
+              data: [],
+              modalFor: undefined,
+            })
+          }
+          handleUserDeleteOrRetain={deleteOrRetainUser}
+        />
+      )}
 
       <Snackbar
         open={snackbarOpen}
